@@ -5,3 +5,11 @@ Final Project for CPE32 / 2021-2022
 
 main  
 dev
+
+**Structure:**  
+osc/  
+|_backend/  
+|_frontend/  
+
+**Install:**  
+git clone then npm install
