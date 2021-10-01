@@ -22,7 +22,7 @@ function initDiagram() {
       });
   
   // when the document is modified, add a "*" to the title
-  diagram.addDiagramListener("Modified", function(e) {
+  diagram.addDiagramListener("Modified", function(e:any) {
     var idx = document.title.indexOf("*");
     if (diagram.isModified) {
       if (idx < 0) document.title += "*";
@@ -47,7 +47,7 @@ function initDiagram() {
     },
     new go.Binding("isShadowed", "isSelected").ofObject(),
     $(go.Shape,
-      { name: "SHAPE", strokeWidth: 2, stroke: red }));
+      { name: "SHAPE", strokeWidth: 2, stroke: red }), new go.Binding("fill", "color").ofModel());
   
     // node template helpers
     var sharedToolTip =
@@ -96,14 +96,16 @@ function initDiagram() {
         $(go.Shape, "Circle", shapeStyle(),
           { fill: red }),  // override the default fill (from shapeStyle()) to be red
         $(go.Shape, "Rectangle", IsInput(false),  // the only port
-          { portId: "", alignment: new go.Spot(0.4, 0.5) }),
+          { portId: "", alignment: new go.Spot(0.4, 0.5) }, new go.Binding("fill", "color").ofModel()),
         { // if double-clicked, an input node will change its value, represented by the color.
-          doubleClick: function(e, obj) {
-            /*e.diagram.startTransaction("Toggle Input");
+          doubleClick: function(e, obj:any) {
+            e.diagram.startTransaction("Toggle Input");
             var shp = obj.findObject("NODESHAPE");
             shp.fill = (shp.fill === green) ? red : green;
+            //e.diagram.model.setDataProperty(shp!, "fill", "green");
             updateStates();
-            e.diagram.commitTransaction("Toggle Input");*/
+            //console.log(shp!.fill)
+            e.diagram.commitTransaction("Toggle Input");
           }
         }
       );
@@ -111,7 +113,7 @@ function initDiagram() {
     var outputTemplate =
       $(go.Node, "Spot", nodeStyle(),
         $(go.Shape, "Square", shapeStyle(),
-          { fill: green }),  // override the default fill (from shapeStyle()) to be green
+          { fill: "grey" }),  // override the default fill (from shapeStyle()) to be green
         $(go.Shape, "Rectangle", IsInput(true),  // the only port
           { portId: "", alignment: new go.Spot(0, 0.5) })
       );
@@ -315,6 +317,77 @@ function initDiagram() {
       { category: "nor" },
       { category: "xnor" }
     ];
+
+    loop();
+
+    function loop() {
+      setTimeout(function() { updateStates(); loop(); }, 250);
+    }
+  
+    function updateStates() {
+      var oldskip = diagram.skipsUndoManager;
+      diagram.skipsUndoManager = true;
+      // do all "input" nodes first
+      diagram.nodes.each(function(node) {
+        if (node.category === "input") {
+          doInput(node);
+        }
+      });
+      // now we can do all other kinds of nodes
+      diagram.nodes.each(function(node) {
+        switch (node.category) {
+          case "and": doAnd(node); break;
+          case "or": doOr(node); break;
+          case "xor": doXor(node); break;
+          case "not": doNot(node); break;
+          case "nand": doNand(node); break;
+          case "nor": doNor(node); break;
+          case "xnor": doXnor(node); break;
+          case "output": doOutput(node); break;
+          case "input": break;  // doInput already called, above
+        }
+      });
+      diagram.skipsUndoManager = oldskip;
+    }
+
+    function setOutputLinks(node:any, color:any) {
+      node.findLinksOutOf().each(function(link:any) { link.findObject("SHAPE").stroke = color; });
+    }
+
+    function doInput(node:any) {
+      setOutputLinks(node, node.findObject("NODESHAPE").fill);
+    }
+
+    function doAnd(node:any) {
+
+    }
+    function doNand(node:any) {
+
+    }
+    function doNot(node:any) {
+
+    }
+
+    function doOr(node:any) {
+
+    }
+    function doNor(node:any) {
+
+    }
+
+    function doXor(node:any) {
+
+    }
+    function doXnor(node:any) {
+
+    }
+
+    function doOutput(node:any) {
+      // assume there is just one input link
+      // we just need to update the node's Shape.fill
+      node.linksConnected.each(function(link:any) { node.findObject("NODESHAPE").fill = link.findObject("SHAPE").stroke; });
+    }
+
 
   return diagram;
 }
