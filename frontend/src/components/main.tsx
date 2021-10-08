@@ -364,39 +364,45 @@ function initDiagram() {
       setOutputLinks(node, node.findObject("NODESHAPE").fill);
     }
 
+    function getvalue(node:any,pid:any){
+      var value
+      node.findLinksInto(pid).each( function(link:any) {value=link.findObject("SHAPE").stroke})
+      return value
+    }
+
+    function setvalue(node:any,pid:any,val:any){
+      node.findLinksOutOf(pid).each( function(link:any) {link.findObject("SHAPE").stroke=val})
+    }
+
     function doAnd(node:any) {
       var input = [red,red,red,red,red,red,red,red,red,red]
-          
-      node.findLinksInto("in1").each( function(link:any) {input[0]=link.findObject("SHAPE").stroke})
-      node.findLinksInto("in2").each( function(link:any) {input[1]=link.findObject("SHAPE").stroke})
-      node.findLinksInto("in3").each( function(link:any) {input[2]=link.findObject("SHAPE").stroke})
-      node.findLinksInto("in5").each( function(link:any) {input[3]=link.findObject("SHAPE").stroke})
-      node.findLinksInto("in6").each( function(link:any) {input[4]=link.findObject("SHAPE").stroke})
-      node.findLinksInto("in8").each( function(link:any) {input[5]=link.findObject("SHAPE").stroke})
-      node.findLinksInto("in9").each( function(link:any) {input[6]=link.findObject("SHAPE").stroke})
-      node.findLinksInto("in11").each( function(link:any) {input[7]=link.findObject("SHAPE").stroke})
-      node.findLinksInto("in12").each( function(link:any) {input[8]=link.findObject("SHAPE").stroke})
-      node.findLinksInto("in14").each( function(link:any) {input[9]=link.findObject("SHAPE").stroke})
+      
+      input[0] = getvalue(node,"in1")!
+      input[1] = getvalue(node,"in2")!
+      input[2] = getvalue(node,"in3")!
+      input[3] = getvalue(node,"in5")!
+      input[4] = getvalue(node,"in6")!
+      input[5] = getvalue(node,"in8")!
+      input[6] = getvalue(node,"in9")!
+      input[7] = getvalue(node,"in11")!
+      input[8] = getvalue(node,"in12")!
+      input[9] = getvalue(node,"in14")!
 
-      node.findLinksOutOf("out4").each( function(link:any) {
-        if(input[1]===green && input[2]===green) link.findObject("SHAPE").stroke = green
-        else link.findObject("SHAPE").stroke = red
-      })
+      if(input[0]===green && input[9]===green){ //vcc and gnd must active
 
-      node.findLinksOutOf("out7").each( function(link:any) {
-        if(input[3]===green && input[4]===green) link.findObject("SHAPE").stroke = green
-        else link.findObject("SHAPE").stroke = red
-      })
+        if(input[1]===green && input[2]==green) setvalue(node,"out4",green)
+        else setvalue(node,"out4",red)
 
-      node.findLinksOutOf("out10").each( function(link:any) {
-        if(input[5]===green && input[6]===green) link.findObject("SHAPE").stroke = green
-        else link.findObject("SHAPE").stroke = red
-      })
+        if(input[3]===green && input[4]==green) setvalue(node,"out7",green)
+        else setvalue(node,"out7",red)
 
-      node.findLinksOutOf("out13").each( function(link:any) {
-        if(input[7]===green && input[8]===green) link.findObject("SHAPE").stroke = green
-        else link.findObject("SHAPE").stroke = red
-      })
+        if(input[5]===green && input[6]==green) setvalue(node,"out10",green)
+        else setvalue(node,"out10",red)
+
+        if(input[7]===green && input[8]==green) setvalue(node,"out13",green)
+        else setvalue(node,"out13",red)
+
+      }
 
     }
 
