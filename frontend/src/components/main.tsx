@@ -47,7 +47,7 @@ function initDiagram() {
     },
     new go.Binding("isShadowed", "isSelected").ofObject(),
     $(go.Shape,
-      { name: "SHAPE", strokeWidth: 2, stroke: red }), new go.Binding("fill", "color").ofModel());
+      { name: "SHAPE", strokeWidth: 2, stroke: red }), new go.Binding("stroke", "color").ofModel());
   
     // node template helpers
     var sharedToolTip =
@@ -102,9 +102,7 @@ function initDiagram() {
             e.diagram.startTransaction("Toggle Input");
             var shp = obj.findObject("NODESHAPE");
             shp.fill = (shp.fill === green) ? red : green;
-            //e.diagram.model.setDataProperty(shp!, "fill", "green");
             updateStates();
-            //console.log(shp!.fill)
             e.diagram.commitTransaction("Toggle Input");
           }
         }
@@ -123,34 +121,34 @@ function initDiagram() {
         $(go.Shape, "Rectangle", shapeStyle(),
             { fill: "black" }),
         $(go.Shape, "Rectangle", IsInput(true),
-          { portId: "in1", alignment: new go.Spot(0.05, 1) }),
+          { portId: "in1", alignment: new go.Spot(0.05, 0) }),//vcc
         $(go.Shape, "Rectangle", IsInput(true),
-          { portId: "in2", alignment: new go.Spot(0.2, 1) }),
+          { portId: "in2", alignment: new go.Spot(0.2, 0) }),
         $(go.Shape, "Rectangle", IsInput(true),
-          { portId: "in3", alignment: new go.Spot(0.35, 1) }),
+          { portId: "in3", alignment: new go.Spot(0.35, 0) }),
         $(go.Shape, "Rectangle", IsInput(false),
-          { portId: "out4", alignment: new go.Spot(0.5, 1) }),
+          { portId: "out4", alignment: new go.Spot(0.5, 0) }), //out4 of in2 in3
         $(go.Shape, "Rectangle", IsInput(true),
-          { portId: "in5", alignment: new go.Spot(0.65, 1) }),
+          { portId: "in5", alignment: new go.Spot(0.65, 0) }),
         $(go.Shape, "Rectangle", IsInput(true),
-          { portId: "in6", alignment: new go.Spot(0.8, 1) }),
+          { portId: "in6", alignment: new go.Spot(0.8, 0) }),
         $(go.Shape, "Rectangle", IsInput(false),
-          { portId: "out7", alignment: new go.Spot(0.95, 1) }),
+          { portId: "out7", alignment: new go.Spot(0.95, 0) }), //out7 of in5 in6
         $(go.Shape, "Rectangle", IsInput(true),
-          { portId: "in8", alignment: new go.Spot(0.05, 0) }),
+          { portId: "in8", alignment: new go.Spot(0.05, 1) }),
         $(go.Shape, "Rectangle", IsInput(true),
-          { portId: "in9", alignment: new go.Spot(0.2, 0) }),
+          { portId: "in9", alignment: new go.Spot(0.2, 1) }),
         $(go.Shape, "Rectangle", IsInput(false),
-          { portId: "out10", alignment: new go.Spot(0.35, 0) }),
+          { portId: "out10", alignment: new go.Spot(0.35, 1) }), //out10 of in8 in9
         $(go.Shape, "Rectangle", IsInput(true),
-          { portId: "in11", alignment: new go.Spot(0.5, 0) }),
+          { portId: "in11", alignment: new go.Spot(0.5, 1) }),
         $(go.Shape, "Rectangle", IsInput(true),
-          { portId: "in12", alignment: new go.Spot(0.65, 0) }),
+          { portId: "in12", alignment: new go.Spot(0.65, 1) }),
         $(go.Shape, "Rectangle", IsInput(false),
-          { portId: "out13", alignment: new go.Spot(0.8, 0) }),
+          { portId: "out13", alignment: new go.Spot(0.8, 1) }), //out13 of in11 in12
         $(go.Shape, "Rectangle", IsInput(true),
-          { portId: "in14", alignment: new go.Spot(0.95, 0) }),
-        $(go.TextBlock, { text: "7400", stroke: "white" }),
+          { portId: "in14", alignment: new go.Spot(0.95, 1) }), //gnd
+        $(go.TextBlock, { text: "And", stroke: "white" }),
       );
 
     var orTemplate =
@@ -350,8 +348,16 @@ function initDiagram() {
       diagram.skipsUndoManager = oldskip;
     }
 
+    function linkIsTrue(link:any) {  // assume the given Link has a Shape named "SHAPE"
+      return link.findObject("SHAPE").stroke === green;
+    }
+
     function setOutputLinks(node:any, color:any) {
       node.findLinksOutOf().each(function(link:any) { link.findObject("SHAPE").stroke = color; });
+    }
+
+    function setOutputLinksP(node:any, color:any, pid:any) {
+      node.findLinksOutOf(pid).each(function(link:any) { link.findObject("SHAPE").stroke = color; });
     }
 
     function doInput(node:any) {
@@ -359,13 +365,91 @@ function initDiagram() {
     }
 
     function doAnd(node:any) {
+      var f:any = []
+      var output:any = [red,red,red,red]
+          
+      node.findLinksInto().each( function(link:any) {
+
+        f.push(link.findObject("SHAPE").stroke)
+           
+          if (f[1] === green && f[2] === green){
+            output[0] = green
+          }
+          else{
+            output[0] = red
+          }
+
+          if (f[3] === green && f[4] === green){
+            output[1] = green
+          }
+          else{
+            output[1] = red
+          }
+
+          if (f[5] === green && f[6] === green){
+            output[2] = green
+          }
+          else{
+            output[2] = red
+          }
+
+          if (f[7] === green && f[8] === green){
+            output[3] = green
+          }
+          else{
+            output[3] = red
+          }
+      
+        //setOutputLinks(node, color);
+      })
+
+      var count=0
+
+      node.findLinksOutOf().each( function(link:any) {
+
+        if(output[count]){
+          link.findObject("SHAPE").stroke=output[count]
+        }
+      
+        //setOutputLinks(node, color);
+        count = count+1
+      })
+
+      console.log(output)
 
     }
+
     function doNand(node:any) {
 
     }
     function doNot(node:any) {
 
+      var f:any = []
+      var output:any = ''
+        
+          
+      node.findLinksInto().each( function(link:any) {
+
+        f.push(link.findObject("SHAPE").stroke)
+           
+          if (f[0] === green){
+            var color = red
+            output = color
+          }
+          else{
+            var color = green
+            output = color
+          }
+      
+        //setOutputLinks(node, color);
+      })
+
+      node.findLinksOutOf().each( function(link:any) {
+
+        link.findObject("SHAPE").stroke=output
+      
+        //setOutputLinks(node, color);
+      })
     }
 
     function doOr(node:any) {
