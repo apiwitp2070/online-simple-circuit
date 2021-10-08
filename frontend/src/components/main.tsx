@@ -365,57 +365,38 @@ function initDiagram() {
     }
 
     function doAnd(node:any) {
-      var f:any = []
-      var output:any = [red,red,red,red]
+      var input = [red,red,red,red,red,red,red,red,red,red]
           
-      node.findLinksInto().each( function(link:any) {
+      node.findLinksInto("in1").each( function(link:any) {input[0]=link.findObject("SHAPE").stroke})
+      node.findLinksInto("in2").each( function(link:any) {input[1]=link.findObject("SHAPE").stroke})
+      node.findLinksInto("in3").each( function(link:any) {input[2]=link.findObject("SHAPE").stroke})
+      node.findLinksInto("in5").each( function(link:any) {input[3]=link.findObject("SHAPE").stroke})
+      node.findLinksInto("in6").each( function(link:any) {input[4]=link.findObject("SHAPE").stroke})
+      node.findLinksInto("in8").each( function(link:any) {input[5]=link.findObject("SHAPE").stroke})
+      node.findLinksInto("in9").each( function(link:any) {input[6]=link.findObject("SHAPE").stroke})
+      node.findLinksInto("in11").each( function(link:any) {input[7]=link.findObject("SHAPE").stroke})
+      node.findLinksInto("in12").each( function(link:any) {input[8]=link.findObject("SHAPE").stroke})
+      node.findLinksInto("in14").each( function(link:any) {input[9]=link.findObject("SHAPE").stroke})
 
-        f.push(link.findObject("SHAPE").stroke)
-           
-          if (f[1] === green && f[2] === green){
-            output[0] = green
-          }
-          else{
-            output[0] = red
-          }
-
-          if (f[3] === green && f[4] === green){
-            output[1] = green
-          }
-          else{
-            output[1] = red
-          }
-
-          if (f[5] === green && f[6] === green){
-            output[2] = green
-          }
-          else{
-            output[2] = red
-          }
-
-          if (f[7] === green && f[8] === green){
-            output[3] = green
-          }
-          else{
-            output[3] = red
-          }
-      
-        //setOutputLinks(node, color);
+      node.findLinksOutOf("out4").each( function(link:any) {
+        if(input[1]===green && input[2]===green) link.findObject("SHAPE").stroke = green
+        else link.findObject("SHAPE").stroke = red
       })
 
-      var count=0
-
-      node.findLinksOutOf().each( function(link:any) {
-
-        if(output[count]){
-          link.findObject("SHAPE").stroke=output[count]
-        }
-      
-        //setOutputLinks(node, color);
-        count = count+1
+      node.findLinksOutOf("out7").each( function(link:any) {
+        if(input[3]===green && input[4]===green) link.findObject("SHAPE").stroke = green
+        else link.findObject("SHAPE").stroke = red
       })
 
-      console.log(output)
+      node.findLinksOutOf("out10").each( function(link:any) {
+        if(input[5]===green && input[6]===green) link.findObject("SHAPE").stroke = green
+        else link.findObject("SHAPE").stroke = red
+      })
+
+      node.findLinksOutOf("out13").each( function(link:any) {
+        if(input[7]===green && input[8]===green) link.findObject("SHAPE").stroke = green
+        else link.findObject("SHAPE").stroke = red
+      })
 
     }
 
