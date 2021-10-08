@@ -76,11 +76,40 @@ function initDiagram() {
       };
     }
 
-    function IsInput(input: any) {
+    //for bottom output port and top input port
+    function FromBottom(input: any) {
       return {
         desiredSize: new go.Size(6, 6),
         fill: "#c3c6cd",
-        fromSpot: go.Spot.Right,
+        fromSpot: go.Spot.Bottom,
+        fromLinkable: !input,
+        toSpot: go.Spot.Top,
+        toLinkable: input,
+        toMaxLinks: 1,
+        cursor: "pointer"
+      };
+    }
+  
+    //for top output port and bottom input port
+    function FromTop(input: any) {
+      return {
+        desiredSize: new go.Size(6, 6),
+        fill: "#c3c6cd",
+        fromSpot: go.Spot.Top,
+        fromLinkable: !input,
+        toSpot: go.Spot.Bottom,
+        toLinkable: input,
+        toMaxLinks: 1,
+        cursor: "pointer"
+      };
+    }
+
+    //for input and output
+    function InoutPort(input: any) {
+      return {
+        desiredSize: new go.Size(6, 6),
+        fill: "#c3c6cd",
+        fromSpot: go.Spot.Right, 
         fromLinkable: !input,
         toSpot: go.Spot.Left,
         toLinkable: input,
@@ -95,7 +124,7 @@ function initDiagram() {
       $(go.Node, "Spot", nodeStyle(),
         $(go.Shape, "Circle", shapeStyle(),
           { fill: red }),  // override the default fill (from shapeStyle()) to be red
-        $(go.Shape, "Rectangle", IsInput(false),  // the only port
+        $(go.Shape, "Rectangle", InoutPort(false),  // the only port
           { portId: "", alignment: new go.Spot(0.4, 0.5) }, new go.Binding("fill", "color").ofModel()),
         { // if double-clicked, an input node will change its value, represented by the color.
           doubleClick: function(e, obj:any) {
@@ -112,7 +141,7 @@ function initDiagram() {
       $(go.Node, "Spot", nodeStyle(),
         $(go.Shape, "Square", shapeStyle(),
           { fill: "grey" }),  // override the default fill (from shapeStyle()) to be green
-        $(go.Shape, "Rectangle", IsInput(true),  // the only port
+        $(go.Shape, "Rectangle", InoutPort(true),  // the only port
           { portId: "", alignment: new go.Spot(0, 0.5) })
       );
 
@@ -120,33 +149,33 @@ function initDiagram() {
       $(go.Node, "Spot", nodeStyle(),
         $(go.Shape, "Rectangle", shapeStyle(),
             { fill: "black" }),
-        $(go.Shape, "Rectangle", IsInput(true),
+        $(go.Shape, "Rectangle", FromBottom(true),
           { portId: "in1", alignment: new go.Spot(0.05, 0) }),//vcc
-        $(go.Shape, "Rectangle", IsInput(true),
+        $(go.Shape, "Rectangle", FromBottom(true),
           { portId: "in2", alignment: new go.Spot(0.2, 0) }),
-        $(go.Shape, "Rectangle", IsInput(true),
+        $(go.Shape, "Rectangle", FromBottom(true),
           { portId: "in3", alignment: new go.Spot(0.35, 0) }),
-        $(go.Shape, "Rectangle", IsInput(false),
+        $(go.Shape, "Rectangle", FromTop(false),
           { portId: "out4", alignment: new go.Spot(0.5, 0) }), //out4 of in2 in3
-        $(go.Shape, "Rectangle", IsInput(true),
+        $(go.Shape, "Rectangle", FromBottom(true),
           { portId: "in5", alignment: new go.Spot(0.65, 0) }),
-        $(go.Shape, "Rectangle", IsInput(true),
+        $(go.Shape, "Rectangle", FromBottom(true),
           { portId: "in6", alignment: new go.Spot(0.8, 0) }),
-        $(go.Shape, "Rectangle", IsInput(false),
+        $(go.Shape, "Rectangle", FromTop(false),
           { portId: "out7", alignment: new go.Spot(0.95, 0) }), //out7 of in5 in6
-        $(go.Shape, "Rectangle", IsInput(true),
+        $(go.Shape, "Rectangle", FromTop(true),
           { portId: "in8", alignment: new go.Spot(0.05, 1) }),
-        $(go.Shape, "Rectangle", IsInput(true),
+        $(go.Shape, "Rectangle", FromTop(true),
           { portId: "in9", alignment: new go.Spot(0.2, 1) }),
-        $(go.Shape, "Rectangle", IsInput(false),
+        $(go.Shape, "Rectangle", FromBottom(false),
           { portId: "out10", alignment: new go.Spot(0.35, 1) }), //out10 of in8 in9
-        $(go.Shape, "Rectangle", IsInput(true),
+        $(go.Shape, "Rectangle", FromTop(true),
           { portId: "in11", alignment: new go.Spot(0.5, 1) }),
-        $(go.Shape, "Rectangle", IsInput(true),
+        $(go.Shape, "Rectangle", FromTop(true),
           { portId: "in12", alignment: new go.Spot(0.65, 1) }),
-        $(go.Shape, "Rectangle", IsInput(false),
+        $(go.Shape, "Rectangle", FromBottom(false),
           { portId: "out13", alignment: new go.Spot(0.8, 1) }), //out13 of in11 in12
-        $(go.Shape, "Rectangle", IsInput(true),
+        $(go.Shape, "Rectangle", FromTop(true),
           { portId: "in14", alignment: new go.Spot(0.95, 1) }), //gnd
         $(go.TextBlock, { text: "And", stroke: "white" }),
       );
@@ -155,33 +184,33 @@ function initDiagram() {
       $(go.Node, "Spot", nodeStyle(),
         $(go.Shape, "Rectangle", shapeStyle(),
             { fill: "black" }),
-        $(go.Shape, "Rectangle", IsInput(true),
+        $(go.Shape, "Rectangle", InoutPort(true),
           { portId: "in1", alignment: new go.Spot(0.05, 1) }),
-        $(go.Shape, "Rectangle", IsInput(true),
+        $(go.Shape, "Rectangle", InoutPort(true),
           { portId: "in2", alignment: new go.Spot(0.2, 1) }),
-        $(go.Shape, "Rectangle", IsInput(true),
+        $(go.Shape, "Rectangle", InoutPort(true),
           { portId: "in3", alignment: new go.Spot(0.35, 1) }),
-        $(go.Shape, "Rectangle", IsInput(false),
+        $(go.Shape, "Rectangle", InoutPort(false),
           { portId: "out4", alignment: new go.Spot(0.5, 1) }),
-        $(go.Shape, "Rectangle", IsInput(true),
+        $(go.Shape, "Rectangle", InoutPort(true),
           { portId: "in5", alignment: new go.Spot(0.65, 1) }),
-        $(go.Shape, "Rectangle", IsInput(true),
+        $(go.Shape, "Rectangle", InoutPort(true),
           { portId: "in6", alignment: new go.Spot(0.8, 1) }),
-        $(go.Shape, "Rectangle", IsInput(false),
+        $(go.Shape, "Rectangle", InoutPort(false),
           { portId: "out7", alignment: new go.Spot(0.95, 1) }),
-        $(go.Shape, "Rectangle", IsInput(true),
+        $(go.Shape, "Rectangle", InoutPort(true),
           { portId: "in8", alignment: new go.Spot(0.05, 0) }),
-        $(go.Shape, "Rectangle", IsInput(true),
+        $(go.Shape, "Rectangle", InoutPort(true),
           { portId: "in9", alignment: new go.Spot(0.2, 0) }),
-        $(go.Shape, "Rectangle", IsInput(false),
+        $(go.Shape, "Rectangle", InoutPort(false),
           { portId: "out10", alignment: new go.Spot(0.35, 0) }),
-        $(go.Shape, "Rectangle", IsInput(true),
+        $(go.Shape, "Rectangle", InoutPort(true),
           { portId: "in11", alignment: new go.Spot(0.5, 0) }),
-        $(go.Shape, "Rectangle", IsInput(true),
+        $(go.Shape, "Rectangle", InoutPort(true),
           { portId: "in12", alignment: new go.Spot(0.65, 0) }),
-        $(go.Shape, "Rectangle", IsInput(false),
+        $(go.Shape, "Rectangle", InoutPort(false),
           { portId: "out13", alignment: new go.Spot(0.8, 0) }),
-        $(go.Shape, "Rectangle", IsInput(true),
+        $(go.Shape, "Rectangle", InoutPort(true),
           { portId: "in14", alignment: new go.Spot(0.95, 0) }),
         $(go.TextBlock, { text: "or", stroke: "white" }),
       );
@@ -190,33 +219,33 @@ function initDiagram() {
       $(go.Node, "Spot", nodeStyle(),
         $(go.Shape, "Rectangle", shapeStyle(),
           { fill: "black" }),
-        $(go.Shape, "Rectangle", IsInput(true),
+        $(go.Shape, "Rectangle", InoutPort(true),
           { portId: "in1", alignment: new go.Spot(0.05, 1) }),
-        $(go.Shape, "Rectangle", IsInput(true),
+        $(go.Shape, "Rectangle", InoutPort(true),
           { portId: "in2", alignment: new go.Spot(0.2, 1) }),
-        $(go.Shape, "Rectangle", IsInput(true),
+        $(go.Shape, "Rectangle", InoutPort(true),
           { portId: "in3", alignment: new go.Spot(0.35, 1) }),
-        $(go.Shape, "Rectangle", IsInput(false),
+        $(go.Shape, "Rectangle", InoutPort(false),
           { portId: "out4", alignment: new go.Spot(0.5, 1) }),
-        $(go.Shape, "Rectangle", IsInput(true),
+        $(go.Shape, "Rectangle", InoutPort(true),
           { portId: "in5", alignment: new go.Spot(0.65, 1) }),
-        $(go.Shape, "Rectangle", IsInput(true),
+        $(go.Shape, "Rectangle", InoutPort(true),
           { portId: "in6", alignment: new go.Spot(0.8, 1) }),
-        $(go.Shape, "Rectangle", IsInput(false),
+        $(go.Shape, "Rectangle", InoutPort(false),
           { portId: "out7", alignment: new go.Spot(0.95, 1) }),
-        $(go.Shape, "Rectangle", IsInput(true),
+        $(go.Shape, "Rectangle", InoutPort(true),
           { portId: "in8", alignment: new go.Spot(0.05, 0) }),
-        $(go.Shape, "Rectangle", IsInput(true),
+        $(go.Shape, "Rectangle", InoutPort(true),
           { portId: "in9", alignment: new go.Spot(0.2, 0) }),
-        $(go.Shape, "Rectangle", IsInput(false),
+        $(go.Shape, "Rectangle", InoutPort(false),
           { portId: "out10", alignment: new go.Spot(0.35, 0) }),
-        $(go.Shape, "Rectangle", IsInput(true),
+        $(go.Shape, "Rectangle", InoutPort(true),
           { portId: "in11", alignment: new go.Spot(0.5, 0) }),
-        $(go.Shape, "Rectangle", IsInput(true),
+        $(go.Shape, "Rectangle", InoutPort(true),
           { portId: "in12", alignment: new go.Spot(0.65, 0) }),
-        $(go.Shape, "Rectangle", IsInput(false),
+        $(go.Shape, "Rectangle", InoutPort(false),
           { portId: "out13", alignment: new go.Spot(0.8, 0) }),
-        $(go.Shape, "Rectangle", IsInput(true),
+        $(go.Shape, "Rectangle", InoutPort(true),
           { portId: "in14", alignment: new go.Spot(0.95, 0) }),
         $(go.TextBlock, { text: "xor", stroke: "white" }),
       );
@@ -225,33 +254,33 @@ function initDiagram() {
       $(go.Node, "Spot", nodeStyle(),
         $(go.Shape, "Rectangle", shapeStyle(),
             { fill: "black" }),
-        $(go.Shape, "Rectangle", IsInput(true),
+        $(go.Shape, "Rectangle", InoutPort(true),
           { portId: "in1", alignment: new go.Spot(0.05, 1) }),
-        $(go.Shape, "Rectangle", IsInput(true),
+        $(go.Shape, "Rectangle", InoutPort(true),
           { portId: "in2", alignment: new go.Spot(0.2, 1) }),
-        $(go.Shape, "Rectangle", IsInput(true),
+        $(go.Shape, "Rectangle", InoutPort(true),
           { portId: "in3", alignment: new go.Spot(0.35, 1) }),
-        $(go.Shape, "Rectangle", IsInput(false),
+        $(go.Shape, "Rectangle", InoutPort(false),
           { portId: "out4", alignment: new go.Spot(0.5, 1) }),
-        $(go.Shape, "Rectangle", IsInput(true),
+        $(go.Shape, "Rectangle", InoutPort(true),
           { portId: "in5", alignment: new go.Spot(0.65, 1) }),
-        $(go.Shape, "Rectangle", IsInput(true),
+        $(go.Shape, "Rectangle", InoutPort(true),
           { portId: "in6", alignment: new go.Spot(0.8, 1) }),
-        $(go.Shape, "Rectangle", IsInput(false),
+        $(go.Shape, "Rectangle", InoutPort(false),
           { portId: "out7", alignment: new go.Spot(0.95, 1) }),
-        $(go.Shape, "Rectangle", IsInput(true),
+        $(go.Shape, "Rectangle", InoutPort(true),
           { portId: "in8", alignment: new go.Spot(0.05, 0) }),
-        $(go.Shape, "Rectangle", IsInput(true),
+        $(go.Shape, "Rectangle", InoutPort(true),
           { portId: "in9", alignment: new go.Spot(0.2, 0) }),
-        $(go.Shape, "Rectangle", IsInput(false),
+        $(go.Shape, "Rectangle", InoutPort(false),
           { portId: "out10", alignment: new go.Spot(0.35, 0) }),
-        $(go.Shape, "Rectangle", IsInput(true),
+        $(go.Shape, "Rectangle", InoutPort(true),
           { portId: "in11", alignment: new go.Spot(0.5, 0) }),
-        $(go.Shape, "Rectangle", IsInput(true),
+        $(go.Shape, "Rectangle", InoutPort(true),
           { portId: "in12", alignment: new go.Spot(0.65, 0) }),
-        $(go.Shape, "Rectangle", IsInput(false),
+        $(go.Shape, "Rectangle", InoutPort(false),
           { portId: "out13", alignment: new go.Spot(0.8, 0) }),
-        $(go.Shape, "Rectangle", IsInput(true),
+        $(go.Shape, "Rectangle", InoutPort(true),
           { portId: "in14", alignment: new go.Spot(0.95, 0) }),
         $(go.TextBlock, { text: "nor", stroke: "white" }),
       );
@@ -259,11 +288,11 @@ function initDiagram() {
     var xnorTemplate =
       $(go.Node, "Spot", nodeStyle(),
         $(go.Shape, "Rectangle", shapeStyle()),
-        $(go.Shape, "Rectangle", IsInput(true),
+        $(go.Shape, "Rectangle", InoutPort(true),
           { portId: "in1", alignment: new go.Spot(0, 0.3) }),
-        $(go.Shape, "Rectangle", IsInput(true),
+        $(go.Shape, "Rectangle", InoutPort(true),
           { portId: "in2", alignment: new go.Spot(0, 0.7) }),
-        $(go.Shape, "Rectangle", IsInput(false),
+        $(go.Shape, "Rectangle", InoutPort(false),
           { portId: "out", alignment: new go.Spot(1, 0.5) }),
         $(go.TextBlock, { text: "xnor", stroke: "white" }),
       );
@@ -271,11 +300,11 @@ function initDiagram() {
     var nandTemplate =
       $(go.Node, "Spot", nodeStyle(),
         $(go.Shape, "Rectangle", shapeStyle()),
-        $(go.Shape, "Rectangle", IsInput(true),
+        $(go.Shape, "Rectangle", InoutPort(true),
           { portId: "in1", alignment: new go.Spot(0, 0.3) }),
-        $(go.Shape, "Rectangle", IsInput(true),
+        $(go.Shape, "Rectangle", InoutPort(true),
           { portId: "in2", alignment: new go.Spot(0, 0.7) }),
-        $(go.Shape, "Rectangle", IsInput(false),
+        $(go.Shape, "Rectangle", InoutPort(false),
           { portId: "out", alignment: new go.Spot(1, 0.5) }),
         $(go.TextBlock, { text: "nand", stroke: "white" }),
       );
@@ -283,9 +312,9 @@ function initDiagram() {
     var notTemplate =
       $(go.Node, "Spot", nodeStyle(),
         $(go.Shape, "Rectangle", shapeStyle()),
-        $(go.Shape, "Rectangle", IsInput(true),
+        $(go.Shape, "Rectangle", InoutPort(true),
           { portId: "in", alignment: new go.Spot(0, 0.5) }),
-        $(go.Shape, "Rectangle", IsInput(false),
+        $(go.Shape, "Rectangle", InoutPort(false),
           { portId: "out", alignment: new go.Spot(1, 0.5) }),
         $(go.TextBlock, { text: "not", stroke: "white" }),
       );
@@ -396,16 +425,16 @@ function initDiagram() {
 
       if(input[0]===green && input[9]===green){ //vcc and gnd must active
 
-        if(input[1]===green && input[2]==green) setvalue(node,"out4",green)
+        if(input[1]===green && input[2]===green) setvalue(node,"out4",green)
         else setvalue(node,"out4",red)
 
-        if(input[3]===green && input[4]==green) setvalue(node,"out7",green)
+        if(input[3]===green && input[4]===green) setvalue(node,"out7",green)
         else setvalue(node,"out7",red)
 
-        if(input[5]===green && input[6]==green) setvalue(node,"out10",green)
+        if(input[5]===green && input[6]===green) setvalue(node,"out10",green)
         else setvalue(node,"out10",red)
 
-        if(input[7]===green && input[8]==green) setvalue(node,"out13",green)
+        if(input[7]===green && input[8]===green) setvalue(node,"out13",green)
         else setvalue(node,"out13",red)
 
       }
