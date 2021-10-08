@@ -374,7 +374,7 @@ function initDiagram() {
       node.findLinksOutOf(pid).each( function(link:any) {link.findObject("SHAPE").stroke=val})
     }
 
-    function doAnd(node:any) {
+    function getinput10(node:any){
       var input = [red,red,red,red,red,red,red,red,red,red]
       
       input[0] = getvalue(node,"in1")!
@@ -387,6 +387,12 @@ function initDiagram() {
       input[7] = getvalue(node,"in11")!
       input[8] = getvalue(node,"in12")!
       input[9] = getvalue(node,"in14")!
+
+      return input
+    }
+
+    function doAnd(node:any) {
+      var input = getinput10(node)
 
       if(input[0]===green && input[9]===green){ //vcc and gnd must active
 
