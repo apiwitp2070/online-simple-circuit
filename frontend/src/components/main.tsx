@@ -1,5 +1,5 @@
 import React from 'react';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 import * as go from 'gojs';
 import { ReactDiagram } from 'gojs-react';
@@ -33,6 +33,16 @@ function initDiagram() {
 
   //create a new Platte
   var palette = new go.Palette("palette");
+  var palette2 = new go.Palette("palette2");
+
+  //grid
+  diagram.grid.visible = true;
+  diagram.grid =
+  $(go.Panel, go.Panel.Grid,  // or "Grid"
+    { gridCellSize: new go.Size(10, 10) },
+    $(go.Shape, "LineH", { stroke: "lightgray" }),
+    $(go.Shape, "LineV", { stroke: "lightgray" })
+  );
   
   // creates relinkable Links that will avoid crossing Nodes when possible and will jump over other Links in their paths
   diagram.linkTemplate =
@@ -332,6 +342,8 @@ function initDiagram() {
   
     // share the template map with the Palette
     palette.nodeTemplateMap = diagram.nodeTemplateMap;
+    //will change to LED and such
+    palette2.nodeTemplateMap = diagram.nodeTemplateMap;
 
     palette.model.nodeDataArray = [
       { category: "input" },
@@ -343,6 +355,13 @@ function initDiagram() {
       { category: "nand" },
       { category: "nor" },
       { category: "xnor" }
+    ];
+
+    //will be changed to LED, resistor, etc.
+    palette2.model.nodeDataArray = [
+      { category: "input" },
+      { category: "output" },
+      { category: "and" },
     ];
 
     loop();
@@ -504,6 +523,9 @@ function Main() {
     document.title = "Online Simple Circuit"
   }, []);
 
+  const [showIC, setShowIC] = useState(true);
+  const [showOthers, setShowOthers] = useState(true);
+
   return (
     <div>
       <div className="absolute flex items-center w-full h-16 bg-black">
@@ -526,7 +548,25 @@ function Main() {
           />
         </div>
 
-        <div style={{height: "90vh"}} className="mt-16 w-1/5 bg-gray-100" id="palette">
+        <div style={{height: "90vh"}} className="mt-16 w-1/5 flex flex-col bg-gray-100">
+          <div className="p-2 border border-black flex justify-between bg-blue-100" onClick={() => setShowIC(!showIC)}>
+            <h1>IC Gate</h1>
+            <h1>{showIC ? 'V' : '>'}</h1>
+          </div>
+          <div
+            style={{height: "40vh"}}
+            className={showIC ? "bg-gray-100" : "hidden"}
+            id="palette">
+          </div>
+          <div className="p-2 border border-black flex justify-between bg-blue-100" onClick={() => setShowOthers(!showOthers)}>
+            <h1>Others</h1>
+            <h1>{showOthers ? 'V' : '>'}</h1>
+          </div>
+          <div
+            style={{height: "30vh"}}
+            className={showOthers ? "bg-gray-100" : "hidden"}
+            id="palette2">
+          </div>
         </div>
 
       </div>
