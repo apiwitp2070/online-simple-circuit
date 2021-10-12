@@ -1,25 +1,30 @@
 import React from 'react';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
 import * as go from 'gojs';
 import { ReactDiagram } from 'gojs-react';
 
 import '../App.css';  // contains .diagram-component CSS
 
-//Global variable
-var red = "orangered";  // 0 or false
-var green = "forestgreen";  // 1 or true
-var KAPPA = 4 * ((Math.sqrt(2) - 1) / 3);
 
 function initDiagram() {
+
+  // define variable
+  var red = "orangered";  // 0 or false
+  var green = "forestgreen";  // 1 or true
+  var KAPPA = 4 * ((Math.sqrt(2) - 1) / 3);
+
+
   const $ = go.GraphObject.make;
   // set your license key here before creating the diagram: go.Diagram.licenseKey = "...";
   const diagram =
     $(go.Diagram,
       {
+        "toolManager.mouseWheelBehavior": go.ToolManager.WheelZoom,
         "draggingTool.isGridSnapEnabled": true,
-        'undoManager.isEnabled': true,  // must be set to allow for model change listening
-        'clickCreatingTool.archetypeNodeData': { text: 'new node', color: 'lightblue' },
+        'undoManager.isEnabled': true,
+        'clickCreatingTool.archetypeNodeData': { text: 'new text', color: 'lightblue' },
+        'initialScale': 1.5,
       });
   
   // when the document is modified, add a "*" to the title
@@ -32,11 +37,11 @@ function initDiagram() {
     }
   });
 
-  //create a new Platte
+  // create a new Platte
   var palette = new go.Palette("palette");
   var palette2 = new go.Palette("palette2");
 
-  //grid
+  // grid
   diagram.grid.visible = true;
   diagram.grid =
   $(go.Panel, go.Panel.Grid,  // or "Grid"
@@ -54,7 +59,7 @@ function initDiagram() {
   });
   
   // creates relinkable Links that will avoid crossing Nodes when possible 
-  //and will jump over other Links in their paths
+  // and will jump over other Links in their paths
   diagram.linkTemplate =
     $(go.Link,
       {
@@ -76,7 +81,7 @@ function initDiagram() {
       $(go.TextBlock, { margin: 2 },
         new go.Binding("text", "", function(d) { return d.category; })));
 
-  //node settings
+  // node settings
 
   function nodeStyle() {
     return [new go.Binding("location", "loc", go.Point.parse).makeTwoWay(go.Point.stringify),
@@ -105,7 +110,7 @@ function initDiagram() {
     }
   }
 
-  //for bottom output port and top input port
+  // for bottom output port and top input port
   function FromBottom(input: any) {
     return {
       desiredSize: new go.Size(6, 6),
@@ -114,12 +119,11 @@ function initDiagram() {
       fromLinkable: !input,
       toSpot: go.Spot.Top,
       toLinkable: input,
-      toMaxLinks: 1,
       cursor: "pointer"
     };
   }
   
-  //for top output port and bottom input port
+  // for top output port and bottom input port
   function FromTop(input: any) {
     return {
       desiredSize: new go.Size(6, 6),
@@ -128,12 +132,11 @@ function initDiagram() {
       fromLinkable: !input,
       toSpot: go.Spot.Bottom,
       toLinkable: input,
-      toMaxLinks: 1,
       cursor: "pointer"
     };
   }
 
-  //for input and output
+  // for input and output
   function InoutPort(input: any) {
     return {
       desiredSize: new go.Size(6, 6),
@@ -142,7 +145,6 @@ function initDiagram() {
       fromLinkable: !input,
       toSpot: go.Spot.Left,
       toLinkable: input,
-      toMaxLinks: 1,
       cursor: "pointer"
     };
   }
@@ -170,8 +172,8 @@ function initDiagram() {
   var outputTemplate =
     $(go.Node, "Spot", nodeStyle(),
       $(go.Shape, "Square", shapeStyle(),
-        { fill: "grey" }),  // override the default fill (from shapeStyle()) to be green
-      $(go.Shape, "Rectangle", InoutPort(true),  // the only port
+        { fill: "grey" }),
+      $(go.Shape, "Rectangle", InoutPort(true),
         { portId: "", alignment: new go.Spot(0, 0.5) })
     );
 
@@ -254,6 +256,18 @@ function initDiagram() {
       $(go.TextBlock, { text: "not", stroke: "white" }),
     );
 
+  var ledTemplate = 
+    $(go.Node, "Spot", nodeStyle(),
+      $(go.Shape, "Rectangle", shapeStyle()),
+      $(go.TextBlock, { text: "led", stroke: "white" }),
+    );
+
+  var resistorTemplate = 
+    $(go.Node, "Spot", nodeStyle(),
+      $(go.Shape, "Rectangle", shapeStyle()),
+      $(go.TextBlock, { text: "resistor", stroke: "white" }),
+  );
+
   // add the templates created above to diagram and palette
   diagram.nodeTemplateMap.add("input", inputTemplate);
   diagram.nodeTemplateMap.add("output", outputTemplate);
@@ -264,6 +278,8 @@ function initDiagram() {
   diagram.nodeTemplateMap.add("nand", nandTemplate);
   diagram.nodeTemplateMap.add("nor", norTemplate);
   diagram.nodeTemplateMap.add("xnor", xnorTemplate);
+  diagram.nodeTemplateMap.add("led", ledTemplate);
+  diagram.nodeTemplateMap.add("resistor", resistorTemplate);
   
   // share the template map with the Palette
   palette.nodeTemplateMap = diagram.nodeTemplateMap;
@@ -279,14 +295,13 @@ function initDiagram() {
     { category: "not" },
     { category: "nand" },
     { category: "nor" },
-    { category: "xnor" }
+    { category: "xnor" },
   ];
 
   //will be changed to LED, resistor, etc.
   palette2.model.nodeDataArray = [
-    { category: "input" },
-    { category: "output" },
-    { category: "and" },
+    { category: "led" },
+    { category: "resistor" },
   ];
 
   loop();
@@ -441,14 +456,21 @@ function initDiagram() {
   return diagram;
 }
 
+
 // render function...
 function Main() {
+
   useEffect(() => {
     document.title = "Online Simple Circuit"
   }, []);
 
-  const [showIC, setShowIC] = useState(true);
-  const [showOthers, setShowOthers] = useState(true);
+  // for alert when exit page without saving change.
+  // (disabled for now because it's so annoy while testing)
+  /*window.addEventListener("beforeunload", (ev) => 
+  {  
+    ev.preventDefault();
+    return ev.returnValue = 'Are you sure you want to close?';
+  });*/
 
   return (
     <div>
@@ -461,36 +483,34 @@ function Main() {
       </div>
 
       <div className="flex">
-        <div className="mt-16 w-4/5 bg-gray-200 relative">
-          <div className="absolute bottom-4 left-1/2">
-            - 100 % +
-          </div>
+        <div className="mt-16 w-4/5 bg-gray-200 relative border-b border-black">
           <ReactDiagram
             initDiagram={initDiagram}
             divClassName='main-diagram'
             nodeDataArray={[]}
           />
+          <div className="ml-4">
+            <p>Drag an drop component from the right side</p>
+            <div className="flex">
+              <h1 className="pr-5">Ctrl+Z: Undo</h1>
+              <h1 className="pr-5">Ctrl+Y: Redo</h1>
+              <h1>Mouse wheel to zoom in/out</h1>
+            </div>
+          </div>
         </div>
 
-        <div style={{height: "90vh"}} className="mt-16 w-1/5 flex flex-col bg-gray-100">
-          <div className="p-2 border border-black flex justify-between bg-blue-100" onClick={() => setShowIC(!showIC)}>
+        <div style={{height: "90vh"}} className="mt-16 w-1/5 flex flex-col bg-gray-100 border border-black">
+
+          <div className="p-2 border-b border-black flex justify-between bg-blue-100">
             <h1>IC Gate</h1>
-            <h1>{showIC ? 'V' : '>'}</h1>
           </div>
-          <div
-            style={{height: "40vh"}}
-            className={showIC ? "bg-gray-100" : "hidden"}
-            id="palette">
-          </div>
-          <div className="p-2 border border-black flex justify-between bg-blue-100" onClick={() => setShowOthers(!showOthers)}>
+          <div style={{height: "40vh"}} className="bg-gray-100" id="palette"></div>
+
+          <div className="p-2 border-t border-b border-black flex justify-between bg-blue-100">
             <h1>Others</h1>
-            <h1>{showOthers ? 'V' : '>'}</h1>
           </div>
-          <div
-            style={{height: "30vh"}}
-            className={showOthers ? "bg-gray-100" : "hidden"}
-            id="palette2">
-          </div>
+          <div style={{height: "30vh"}} className="bg-gray-100" id="palette2"></div>
+
         </div>
 
       </div>
