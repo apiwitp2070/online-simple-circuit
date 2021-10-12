@@ -72,7 +72,8 @@ function initDiagram() {
       },
       new go.Binding("isShadowed", "isSelected").ofObject(),
       $(go.Shape,
-        { name: "SHAPE", strokeWidth: 2, stroke: red }), new go.Binding("stroke", "color").ofModel());
+        { name: "SHAPE", strokeWidth: 2, stroke: red , _oldval: red}), new go.Binding("stroke", "color").ofModel(), new go.Binding("_oldval", "text").ofModel());
+        
     
   // node template helpers (Tooltip when hover with mouse)
   var sharedToolTip =
@@ -210,51 +211,260 @@ function initDiagram() {
         { portId: "port6", alignment: new go.Spot(0.8, 1) }),//output port6 of port4 port5
       $(go.Shape, "Rectangle", FromTop(true),
         { portId: "port7", alignment: new go.Spot(0.95, 1) }),//gnd port7
-      $(go.TextBlock, { text: "And", stroke: "white" }),
+      $(go.TextBlock, { text: "7408 and", stroke: "white" }),
     );
 
   var orTemplate =
-    $(go.Node, "Spot", nodeStyle(),
-      $(go.Shape, "Rectangle", shapeStyle(),
-          { fill: "black" }),
-      $(go.TextBlock, { text: "or", stroke: "white" }),
+      $(go.Node, "Spot", nodeStyle(),
+      $(go.Shape, "Rectangle", shapeStyle()),
+      $(go.Shape, "HalfEllipse", nodeEllipse(),
+        { alignment: new go.Spot(0.05, 0.5)}),
+      $(go.Shape, "Rectangle", FromBottom(true),
+        { portId: "port14", alignment: new go.Spot(0.05, 0) }),//vcc port14
+      $(go.Shape, "Rectangle", FromBottom(true),
+        { portId: "port13", alignment: new go.Spot(0.2, 0) }),//input port13
+      $(go.Shape, "Rectangle", FromBottom(true),
+        { portId: "port12", alignment: new go.Spot(0.35, 0) }),//input port12
+      $(go.Shape, "Rectangle", FromTop(false),
+        { portId: "port11", alignment: new go.Spot(0.5, 0) }),//output port11 of port13
+      $(go.Shape, "Rectangle", FromBottom(true),
+        { portId: "port10", alignment: new go.Spot(0.65, 0) }),//input port10
+      $(go.Shape, "Rectangle", FromBottom(true),
+        { portId: "port9", alignment: new go.Spot(0.8, 0) }),//input port9
+      $(go.Shape, "Rectangle", FromTop(false),
+        { portId: "port8", alignment: new go.Spot(0.95, 0) }),//output port8 of of port10 port9
+      $(go.Shape, "Rectangle", FromTop(true),
+        { portId: "port1", alignment: new go.Spot(0.05, 1) }),//input port1
+      $(go.Shape, "Rectangle", FromTop(true),
+        { portId: "port2", alignment: new go.Spot(0.2, 1) }),//input port2
+      $(go.Shape, "Rectangle", FromBottom(false),
+        { portId: "port3", alignment: new go.Spot(0.35, 1) }),//output port3 of port1 port2
+      $(go.Shape, "Rectangle", FromTop(true),
+        { portId: "port4", alignment: new go.Spot(0.5, 1) }),//input port4
+      $(go.Shape, "Rectangle", FromTop(true),
+        { portId: "port5", alignment: new go.Spot(0.65, 1) }),//input port5
+      $(go.Shape, "Rectangle", FromBottom(false),
+        { portId: "port6", alignment: new go.Spot(0.8, 1) }),//output port6 of port4 port5
+      $(go.Shape, "Rectangle", FromTop(true),
+        { portId: "port7", alignment: new go.Spot(0.95, 1) }),//gnd port7
+      $(go.TextBlock, { text: "7432 or", stroke: "white" }),
     );
 
   var xorTemplate =
-    $(go.Node, "Spot", nodeStyle(),
-      $(go.Shape, "Rectangle", shapeStyle(),
-        { fill: "black" }),
-      $(go.TextBlock, { text: "xor", stroke: "white" }),
+      $(go.Node, "Spot", nodeStyle(),
+      $(go.Shape, "Rectangle", shapeStyle()),
+      $(go.Shape, "HalfEllipse", nodeEllipse(),
+        { alignment: new go.Spot(0.05, 0.5)}),
+      $(go.Shape, "Rectangle", FromBottom(true),
+        { portId: "port14", alignment: new go.Spot(0.05, 0) }),//vcc port14
+      $(go.Shape, "Rectangle", FromBottom(true),
+        { portId: "port13", alignment: new go.Spot(0.2, 0) }),//input port13
+      $(go.Shape, "Rectangle", FromBottom(true),
+        { portId: "port12", alignment: new go.Spot(0.35, 0) }),//input port12
+      $(go.Shape, "Rectangle", FromTop(false),
+        { portId: "port11", alignment: new go.Spot(0.5, 0) }),//output port11 of port13
+      $(go.Shape, "Rectangle", FromBottom(true),
+        { portId: "port10", alignment: new go.Spot(0.65, 0) }),//input port10
+      $(go.Shape, "Rectangle", FromBottom(true),
+        { portId: "port9", alignment: new go.Spot(0.8, 0) }),//input port9
+      $(go.Shape, "Rectangle", FromTop(false),
+        { portId: "port8", alignment: new go.Spot(0.95, 0) }),//output port8 of of port10 port9
+      $(go.Shape, "Rectangle", FromTop(true),
+        { portId: "port1", alignment: new go.Spot(0.05, 1) }),//input port1
+      $(go.Shape, "Rectangle", FromTop(true),
+        { portId: "port2", alignment: new go.Spot(0.2, 1) }),//input port2
+      $(go.Shape, "Rectangle", FromBottom(false),
+        { portId: "port3", alignment: new go.Spot(0.35, 1) }),//output port3 of port1 port2
+      $(go.Shape, "Rectangle", FromTop(true),
+        { portId: "port4", alignment: new go.Spot(0.5, 1) }),//input port4
+      $(go.Shape, "Rectangle", FromTop(true),
+        { portId: "port5", alignment: new go.Spot(0.65, 1) }),//input port5
+      $(go.Shape, "Rectangle", FromBottom(false),
+        { portId: "port6", alignment: new go.Spot(0.8, 1) }),//output port6 of port4 port5
+      $(go.Shape, "Rectangle", FromTop(true),
+        { portId: "port7", alignment: new go.Spot(0.95, 1) }),//gnd port7
+      $(go.TextBlock, { text: "7486 xor", stroke: "white" }),
     );
 
   var norTemplate =
     $(go.Node, "Spot", nodeStyle(),
-      $(go.Shape, "Rectangle", shapeStyle(),
-          { fill: "black" }),
-      $(go.TextBlock, { text: "nor", stroke: "white" }),
-    );
+    $(go.Shape, "Rectangle", shapeStyle()),
+    $(go.Shape, "HalfEllipse", nodeEllipse(),
+      { alignment: new go.Spot(0.05, 0.5)}),
+    $(go.Shape, "Rectangle", FromBottom(true),
+      { portId: "port14", alignment: new go.Spot(0.05, 0) }),//vcc port14
+    $(go.Shape, "Rectangle", FromBottom(true),
+      { portId: "port13", alignment: new go.Spot(0.2, 0) }),//input port13
+    $(go.Shape, "Rectangle", FromBottom(true),
+      { portId: "port12", alignment: new go.Spot(0.35, 0) }),//input port12
+    $(go.Shape, "Rectangle", FromTop(false),
+      { portId: "port11", alignment: new go.Spot(0.5, 0) }),//output port11 of port13
+    $(go.Shape, "Rectangle", FromBottom(true),
+      { portId: "port10", alignment: new go.Spot(0.65, 0) }),//input port10
+    $(go.Shape, "Rectangle", FromBottom(true),
+      { portId: "port9", alignment: new go.Spot(0.8, 0) }),//input port9
+    $(go.Shape, "Rectangle", FromTop(false),
+      { portId: "port8", alignment: new go.Spot(0.95, 0) }),//output port8 of of port10 port9
+    $(go.Shape, "Rectangle", FromTop(true),
+      { portId: "port1", alignment: new go.Spot(0.05, 1) }),//input port1
+    $(go.Shape, "Rectangle", FromTop(true),
+      { portId: "port2", alignment: new go.Spot(0.2, 1) }),//input port2
+    $(go.Shape, "Rectangle", FromBottom(false),
+      { portId: "port3", alignment: new go.Spot(0.35, 1) }),//output port3 of port1 port2
+    $(go.Shape, "Rectangle", FromTop(true),
+      { portId: "port4", alignment: new go.Spot(0.5, 1) }),//input port4
+    $(go.Shape, "Rectangle", FromTop(true),
+      { portId: "port5", alignment: new go.Spot(0.65, 1) }),//input port5
+    $(go.Shape, "Rectangle", FromBottom(false),
+      { portId: "port6", alignment: new go.Spot(0.8, 1) }),//output port6 of port4 port5
+    $(go.Shape, "Rectangle", FromTop(true),
+      { portId: "port7", alignment: new go.Spot(0.95, 1) }),//gnd port7
+    $(go.TextBlock, { text: "7402 nor", stroke: "white" }),
+  );
 
   var xnorTemplate =
     $(go.Node, "Spot", nodeStyle(),
-      $(go.Shape, "Rectangle", shapeStyle()),
-      $(go.TextBlock, { text: "xnor", stroke: "white" }),
-    );
+    $(go.Shape, "Rectangle", shapeStyle()),
+    $(go.Shape, "HalfEllipse", nodeEllipse(),
+      { alignment: new go.Spot(0.05, 0.5)}),
+    $(go.Shape, "Rectangle", FromBottom(true),
+      { portId: "port14", alignment: new go.Spot(0.05, 0) }),//vcc port14
+    $(go.Shape, "Rectangle", FromBottom(true),
+      { portId: "port13", alignment: new go.Spot(0.2, 0) }),//input port13
+    $(go.Shape, "Rectangle", FromBottom(true),
+      { portId: "port12", alignment: new go.Spot(0.35, 0) }),//input port12
+    $(go.Shape, "Rectangle", FromTop(false),
+      { portId: "port11", alignment: new go.Spot(0.5, 0) }),//output port11 of port13
+    $(go.Shape, "Rectangle", FromBottom(true),
+      { portId: "port10", alignment: new go.Spot(0.65, 0) }),//input port10
+    $(go.Shape, "Rectangle", FromBottom(true),
+      { portId: "port9", alignment: new go.Spot(0.8, 0) }),//input port9
+    $(go.Shape, "Rectangle", FromTop(false),
+      { portId: "port8", alignment: new go.Spot(0.95, 0) }),//output port8 of of port10 port9
+    $(go.Shape, "Rectangle", FromTop(true),
+      { portId: "port1", alignment: new go.Spot(0.05, 1) }),//input port1
+    $(go.Shape, "Rectangle", FromTop(true),
+      { portId: "port2", alignment: new go.Spot(0.2, 1) }),//input port2
+    $(go.Shape, "Rectangle", FromBottom(false),
+      { portId: "port3", alignment: new go.Spot(0.35, 1) }),//output port3 of port1 port2
+    $(go.Shape, "Rectangle", FromTop(true),
+      { portId: "port4", alignment: new go.Spot(0.5, 1) }),//input port4
+    $(go.Shape, "Rectangle", FromTop(true),
+      { portId: "port5", alignment: new go.Spot(0.65, 1) }),//input port5
+    $(go.Shape, "Rectangle", FromBottom(false),
+      { portId: "port6", alignment: new go.Spot(0.8, 1) }),//output port6 of port4 port5
+    $(go.Shape, "Rectangle", FromTop(true),
+      { portId: "port7", alignment: new go.Spot(0.95, 1) }),//gnd port7
+    $(go.TextBlock, { text: "74266 xnor", stroke: "white" }),
+  );
 
   var nandTemplate =
     $(go.Node, "Spot", nodeStyle(),
-      $(go.Shape, "Rectangle", shapeStyle()),
-      $(go.TextBlock, { text: "nand", stroke: "white" }),
-    );
+    $(go.Shape, "Rectangle", shapeStyle()),
+    $(go.Shape, "HalfEllipse", nodeEllipse(),
+      { alignment: new go.Spot(0.05, 0.5)}),
+    $(go.Shape, "Rectangle", FromBottom(true),
+      { portId: "port14", alignment: new go.Spot(0.05, 0) }),//vcc port14
+    $(go.Shape, "Rectangle", FromBottom(true),
+      { portId: "port13", alignment: new go.Spot(0.2, 0) }),//input port13
+    $(go.Shape, "Rectangle", FromBottom(true),
+      { portId: "port12", alignment: new go.Spot(0.35, 0) }),//input port12
+    $(go.Shape, "Rectangle", FromTop(false),
+      { portId: "port11", alignment: new go.Spot(0.5, 0) }),//output port11 of port13
+    $(go.Shape, "Rectangle", FromBottom(true),
+      { portId: "port10", alignment: new go.Spot(0.65, 0) }),//input port10
+    $(go.Shape, "Rectangle", FromBottom(true),
+      { portId: "port9", alignment: new go.Spot(0.8, 0) }),//input port9
+    $(go.Shape, "Rectangle", FromTop(false),
+      { portId: "port8", alignment: new go.Spot(0.95, 0) }),//output port8 of of port10 port9
+    $(go.Shape, "Rectangle", FromTop(true),
+      { portId: "port1", alignment: new go.Spot(0.05, 1) }),//input port1
+    $(go.Shape, "Rectangle", FromTop(true),
+      { portId: "port2", alignment: new go.Spot(0.2, 1) }),//input port2
+    $(go.Shape, "Rectangle", FromBottom(false),
+      { portId: "port3", alignment: new go.Spot(0.35, 1) }),//output port3 of port1 port2
+    $(go.Shape, "Rectangle", FromTop(true),
+      { portId: "port4", alignment: new go.Spot(0.5, 1) }),//input port4
+    $(go.Shape, "Rectangle", FromTop(true),
+      { portId: "port5", alignment: new go.Spot(0.65, 1) }),//input port5
+    $(go.Shape, "Rectangle", FromBottom(false),
+      { portId: "port6", alignment: new go.Spot(0.8, 1) }),//output port6 of port4 port5
+    $(go.Shape, "Rectangle", FromTop(true),
+      { portId: "port7", alignment: new go.Spot(0.95, 1) }),//gnd port7
+    $(go.TextBlock, { text: "7400 nand", stroke: "white" }),
+  );
 
   var notTemplate =
     $(go.Node, "Spot", nodeStyle(),
-      $(go.Shape, "Rectangle", shapeStyle()),
-      $(go.Shape, "Rectangle", InoutPort(true),
-        { portId: "in", alignment: new go.Spot(0, 0.5) }),
-      $(go.Shape, "Rectangle", InoutPort(false),
-        { portId: "out", alignment: new go.Spot(1, 0.5) }),
-      $(go.TextBlock, { text: "not", stroke: "white" }),
-    );
+    $(go.Shape, "Rectangle", shapeStyle()),
+    $(go.Shape, "HalfEllipse", nodeEllipse(),
+      { alignment: new go.Spot(0.05, 0.5)}),
+    $(go.Shape, "Rectangle", FromBottom(true), //fb botout topin , ft topout botin
+      { portId: "port14", alignment: new go.Spot(0.05, 0) }),//vcc port14
+    $(go.Shape, "Rectangle", FromBottom(true),
+      { portId: "port13", alignment: new go.Spot(0.2, 0) }),//input port13
+    $(go.Shape, "Rectangle", FromTop(false),
+      { portId: "port12", alignment: new go.Spot(0.35, 0) }),//output port12 from port13
+    $(go.Shape, "Rectangle", FromBottom(true),
+      { portId: "port11", alignment: new go.Spot(0.5, 0) }),//input port11
+    $(go.Shape, "Rectangle", FromTop(false),
+      { portId: "port10", alignment: new go.Spot(0.65, 0) }),//output port10 from port11
+    $(go.Shape, "Rectangle", FromBottom(true),
+      { portId: "port9", alignment: new go.Spot(0.8, 0) }),//input port9
+    $(go.Shape, "Rectangle", FromTop(false),
+      { portId: "port8", alignment: new go.Spot(0.95, 0) }),//output port8 from port9
+    $(go.Shape, "Rectangle", FromTop(true),
+      { portId: "port1", alignment: new go.Spot(0.05, 1) }),//input port1
+    $(go.Shape, "Rectangle", FromBottom(false),
+      { portId: "port2", alignment: new go.Spot(0.2, 1) }),//output port2 from port1
+    $(go.Shape, "Rectangle", FromTop(true),
+      { portId: "port3", alignment: new go.Spot(0.35, 1) }),//input port3 
+    $(go.Shape, "Rectangle", FromBottom(false),
+      { portId: "port4", alignment: new go.Spot(0.5, 1) }),//output port4 from port3
+    $(go.Shape, "Rectangle", FromTop(true),
+      { portId: "port5", alignment: new go.Spot(0.65, 1) }),//input port5
+    $(go.Shape, "Rectangle", FromBottom(false),
+      { portId: "port6", alignment: new go.Spot(0.8, 1) }),//output port6 from port5
+    $(go.Shape, "Rectangle", FromTop(true),
+      { portId: "port7", alignment: new go.Spot(0.95, 1) }),//gnd port7
+    $(go.TextBlock, { text: "7404 not", stroke: "white" }),
+  );
+
+  var dffTemplate =
+    $(go.Node, "Spot", nodeStyle(),
+    $(go.Shape, "Rectangle", shapeStyle()),
+    $(go.Shape, "HalfEllipse", nodeEllipse(),
+      { alignment: new go.Spot(0.05, 0.5)}),
+    $(go.Shape, "Rectangle", FromBottom(true),
+      { portId: "port14", alignment: new go.Spot(0.05, 0) }),//vcc port14
+    $(go.Shape, "Rectangle", FromBottom(true),
+      { portId: "port13", alignment: new go.Spot(0.2, 0) }),//input clr port13
+    $(go.Shape, "Rectangle", FromBottom(true),
+      { portId: "port12", alignment: new go.Spot(0.35, 0) }),//input d port12
+    $(go.Shape, "Rectangle", FromBottom(true),
+      { portId: "port11", alignment: new go.Spot(0.5, 0) }),//input clk port11
+    $(go.Shape, "Rectangle", FromBottom(true),
+      { portId: "port10", alignment: new go.Spot(0.65, 0) }),//input pre port10 
+    $(go.Shape, "Rectangle", FromTop(false),
+      { portId: "port9", alignment: new go.Spot(0.8, 0) }),//output q port9
+    $(go.Shape, "Rectangle", FromTop(false),
+      { portId: "port8", alignment: new go.Spot(0.95, 0) }),//output q' port8 
+    $(go.Shape, "Rectangle", FromTop(true),
+      { portId: "port1", alignment: new go.Spot(0.05, 1) }),//input clr port1
+    $(go.Shape, "Rectangle", FromTop(true),
+      { portId: "port2", alignment: new go.Spot(0.2, 1) }),//input d port2 
+    $(go.Shape, "Rectangle", FromTop(true),
+      { portId: "port3", alignment: new go.Spot(0.35, 1) }),//input clk port3 
+    $(go.Shape, "Rectangle", FromTop(true),
+      { portId: "port4", alignment: new go.Spot(0.5, 1) }),//input pre port4 
+    $(go.Shape, "Rectangle", FromBottom(false),
+      { portId: "port5", alignment: new go.Spot(0.65, 1) }),//output q port5
+    $(go.Shape, "Rectangle", FromBottom(false),
+      { portId: "port6", alignment: new go.Spot(0.8, 1) }),//output q' port6 
+    $(go.Shape, "Rectangle", FromTop(true),
+      { portId: "port7", alignment: new go.Spot(0.95, 1) }),//gnd port7
+    $(go.TextBlock, { text: "7474 dff", stroke: "white" }),
+  );
 
   var ledTemplate = 
     $(go.Node, "Spot", nodeStyle(),
@@ -280,6 +490,7 @@ function initDiagram() {
   diagram.nodeTemplateMap.add("xnor", xnorTemplate);
   diagram.nodeTemplateMap.add("led", ledTemplate);
   diagram.nodeTemplateMap.add("resistor", resistorTemplate);
+  diagram.nodeTemplateMap.add("dff", dffTemplate);
   
   // share the template map with the Palette
   palette.nodeTemplateMap = diagram.nodeTemplateMap;
@@ -296,6 +507,7 @@ function initDiagram() {
     { category: "nand" },
     { category: "nor" },
     { category: "xnor" },
+    { category: "dff" },
   ];
 
   //will be changed to LED, resistor, etc.
@@ -329,6 +541,7 @@ function initDiagram() {
         case "nand": doNand(node); break;
         case "nor": doNor(node); break;
         case "xnor": doXnor(node); break;
+        case "dff": doDff(node); break;
         case "output": doOutput(node); break;
         case "input": break;  // doInput already called, above
       }
@@ -358,6 +571,12 @@ function initDiagram() {
     return value
   }
 
+  function getoldvalue(node:any,pid:any){
+    var value
+    node.findLinksInto(pid).each( function(link:any) {value=link.findObject("SHAPE")._oldval})
+    return value
+  }
+
   function setvalue(node:any,pid:any,val:any){
     node.findLinksOutOf(pid).each( function(link:any) {link.findObject("SHAPE").stroke=val})
   }
@@ -375,6 +594,40 @@ function initDiagram() {
     input[7] = getvalue(node,"port4")!
     input[8] = getvalue(node,"port5")!
     input[9] = getvalue(node,"port7")!
+
+    return input
+  }
+
+  function getinput8(node:any){
+    var input = [red,red,red,red,red,red,red,red]
+    
+    input[0] = getvalue(node,"port14")!
+    input[1] = getvalue(node,"port13")!
+    input[2] = getvalue(node,"port11")!
+    input[3] = getvalue(node,"port9")!
+    input[4] = getvalue(node,"port1")!
+    input[5] = getvalue(node,"port3")!
+    input[6] = getvalue(node,"port5")!
+    input[7] = getvalue(node,"port7")!
+
+
+    return input
+  }
+
+  function getinputdff(node:any){
+    var input = [red,red,red,red,red,red,red,red,red,red]
+    
+    input[0] = getvalue(node,"port14")!
+    input[1] = getvalue(node,"port13")!
+    input[2] = getvalue(node,"port12")!
+    input[3] = getvalue(node,"port11")!
+    input[4] = getvalue(node,"port10")!
+    input[5] = getvalue(node,"port1")!
+    input[6] = getvalue(node,"port2")!
+    input[7] = getvalue(node,"port3")!
+    input[8] = getvalue(node,"port4")!
+    input[9] = getvalue(node,"port7")!
+
 
     return input
   }
@@ -401,50 +654,148 @@ function initDiagram() {
   }
 
   function doNand(node:any) {
+    var input = getinput10(node)
+
+    if(input[0]===green && input[9]===green){ //vcc and gnd must active
+
+      if(input[1]===green && input[2]===green) {setvalue(node,"port11",red);}
+      else setvalue(node,"port11",green)
+
+      if(input[3]===green && input[4]===green) {setvalue(node,"port8",red);}
+      else setvalue(node,"port8",green)
+
+      if(input[5]===green && input[6]===green) {setvalue(node,"port3",red);}
+      else setvalue(node,"port3",green)
+
+      if(input[7]===green && input[8]===green) {setvalue(node,"port6",red);}
+      else setvalue(node,"port6",green)
+
+    }
 
   }
   function doNot(node:any) {
+    var input = getinput8(node)
 
-    var f:any = []
-    var output:any = ''
-      
-        
-    node.findLinksInto().each( function(link:any) {
+    if(input[0]===green && input[7]===green){ //vcc and gnd must active
 
-      f.push(link.findObject("SHAPE").stroke)
-          
-        if (f[0] === green){
-          var color = red
-          output = color
-        }
-        else{
-          var color = green
-          output = color
-        }
-    
-      //setOutputLinks(node, color);
-    })
+      if(input[1]===green) {setvalue(node,"port12",red);}
+      else setvalue(node,"port12",green)
 
-    node.findLinksOutOf().each( function(link:any) {
+      if(input[2]===green) {setvalue(node,"port10",red);}
+      else setvalue(node,"port10",green)
 
-      link.findObject("SHAPE").stroke=output
-    
-      //setOutputLinks(node, color);
-    })
+      if(input[3]===green) {setvalue(node,"port8",red);}
+      else setvalue(node,"port8",green)
+
+      if(input[4]===green) {setvalue(node,"port2",red);}
+      else setvalue(node,"port2",green)
+
+      if(input[5]===green) {setvalue(node,"port4",red);}
+      else setvalue(node,"port4",green)
+
+      if(input[6]===green) {setvalue(node,"port6",red);}
+      else setvalue(node,"port6",green)
+
+    }
+
   }
 
   function doOr(node:any) {
+    var input = getinput10(node)
+
+    if(input[0]===green && input[9]===green){ //vcc and gnd must active
+
+      if(input[1]===green || input[2]===green) {setvalue(node,"port11",green);}
+      else setvalue(node,"port11",red)
+
+      if(input[3]===green || input[4]===green) {setvalue(node,"port8",green);}
+      else setvalue(node,"port8",red)
+
+      if(input[5]===green || input[6]===green) {setvalue(node,"port3",green);}
+      else setvalue(node,"port3",red)
+
+      if(input[7]===green || input[8]===green) {setvalue(node,"port6",green);}
+      else setvalue(node,"port6",red)
+
+    }
 
   }
   function doNor(node:any) {
+    var input = getinput10(node)
+
+    if(input[0]===green && input[9]===green){ //vcc and gnd must active
+
+      if(input[1]===green || input[2]===green) {setvalue(node,"port11",red);}
+      else setvalue(node,"port11",green)
+
+      if(input[3]===green || input[4]===green) {setvalue(node,"port8",red);}
+      else setvalue(node,"port8",green)
+
+      if(input[5]===green || input[6]===green) {setvalue(node,"port3",red);}
+      else setvalue(node,"port3",green)
+
+      if(input[7]===green || input[8]===green) {setvalue(node,"port6",red);}
+      else setvalue(node,"port6",green)
+
+    }
 
   }
 
   function doXor(node:any) {
+    var input = getinput10(node)
 
+    if(input[0]===green && input[9]===green){ //vcc and gnd must active
+
+      if(input[1]===green && input[2]===green) {setvalue(node,"port11",red);} 
+      if(input[1]===green && input[2]===red) {setvalue(node,"port11",green);}
+      if(input[1]===red && input[2]===green) {setvalue(node,"port11",green);}
+      if(input[1]===red && input[2]===red) {setvalue(node,"port11",red);}
+
+      if(input[3]===green && input[4]===green) {setvalue(node,"port8",red);} 
+      if(input[3]===green && input[4]===red) {setvalue(node,"port8",green);}
+      if(input[3]===red && input[4]===green) {setvalue(node,"port8",green);}
+      if(input[3]===red && input[4]===red) {setvalue(node,"port8",red);}
+
+      if(input[5]===green && input[6]===green) {setvalue(node,"port3",red);} 
+      if(input[5]===green && input[6]===red) {setvalue(node,"port3",green);}
+      if(input[5]===red && input[6]===green) {setvalue(node,"port3",green);}
+      if(input[5]===red && input[6]===red) {setvalue(node,"port3",red);}
+
+      if(input[7]===green && input[8]===green) {setvalue(node,"port6",red);} 
+      if(input[7]===green && input[8]===red) {setvalue(node,"port6",green);}
+      if(input[7]===red && input[8]===green) {setvalue(node,"port6",green);}
+      if(input[7]===red && input[8]===red) {setvalue(node,"port6",red);}
+    }
   }
   function doXnor(node:any) {
+    var input = getinput10(node)
 
+    if(input[0]===green && input[9]===green){ //vcc and gnd must active
+
+      if(input[1]===green && input[2]===green) {setvalue(node,"port11",green);} 
+      if(input[1]===green && input[2]===red) {setvalue(node,"port11",red);}
+      if(input[1]===red && input[2]===green) {setvalue(node,"port11",red);}
+      if(input[1]===red && input[2]===red) {setvalue(node,"port11",green);}
+
+      if(input[3]===green && input[4]===green) {setvalue(node,"port8",green);} 
+      if(input[3]===green && input[4]===red) {setvalue(node,"port8",red);}
+      if(input[3]===red && input[4]===green) {setvalue(node,"port8",red);}
+      if(input[3]===red && input[4]===red) {setvalue(node,"port8",green);}
+
+      if(input[5]===green && input[6]===green) {setvalue(node,"port3",green);} 
+      if(input[5]===green && input[6]===red) {setvalue(node,"port3",red);}
+      if(input[5]===red && input[6]===green) {setvalue(node,"port3",red);}
+      if(input[5]===red && input[6]===red) {setvalue(node,"port3",green);}
+
+      if(input[7]===green && input[8]===green) {setvalue(node,"port6",green);} 
+      if(input[7]===green && input[8]===red) {setvalue(node,"port6",red);}
+      if(input[7]===red && input[8]===green) {setvalue(node,"port6",red);}
+      if(input[7]===red && input[8]===red) {setvalue(node,"port6",green);}
+    }
+  }
+
+  function doDff(node:any) {
+    var input = getinputdff(node)
   }
 
   function doOutput(node:any) {
