@@ -183,33 +183,33 @@ function initDiagram() {
       $(go.Shape, "HalfEllipse", nodeEllipse(),
         { alignment: new go.Spot(0.05, 0.5)}),
       $(go.Shape, "Rectangle", FromBottom(true),
-        { portId: "in1", alignment: new go.Spot(0.05, 0) }),//vcc
+        { portId: "port14", alignment: new go.Spot(0.05, 0) }),//vcc port14
       $(go.Shape, "Rectangle", FromBottom(true),
-        { portId: "in2", alignment: new go.Spot(0.2, 0) }),
+        { portId: "port13", alignment: new go.Spot(0.2, 0) }),//input port13
       $(go.Shape, "Rectangle", FromBottom(true),
-        { portId: "in3", alignment: new go.Spot(0.35, 0) }),
+        { portId: "port12", alignment: new go.Spot(0.35, 0) }),//input port12
       $(go.Shape, "Rectangle", FromTop(false),
-        { portId: "out4", alignment: new go.Spot(0.5, 0) }), //out4 of in2 in3
+        { portId: "port11", alignment: new go.Spot(0.5, 0) }),//output port11 of port13
       $(go.Shape, "Rectangle", FromBottom(true),
-        { portId: "in5", alignment: new go.Spot(0.65, 0) }),
+        { portId: "port10", alignment: new go.Spot(0.65, 0) }),//input port10
       $(go.Shape, "Rectangle", FromBottom(true),
-        { portId: "in6", alignment: new go.Spot(0.8, 0) }),
+        { portId: "port9", alignment: new go.Spot(0.8, 0) }),//input port9
       $(go.Shape, "Rectangle", FromTop(false),
-        { portId: "out7", alignment: new go.Spot(0.95, 0) }), //out7 of in5 in6
+        { portId: "port8", alignment: new go.Spot(0.95, 0) }),//output port8 of of port10 port9
       $(go.Shape, "Rectangle", FromTop(true),
-        { portId: "in8", alignment: new go.Spot(0.05, 1) }),
+        { portId: "port1", alignment: new go.Spot(0.05, 1) }),//input port1
       $(go.Shape, "Rectangle", FromTop(true),
-        { portId: "in9", alignment: new go.Spot(0.2, 1) }),
+        { portId: "port2", alignment: new go.Spot(0.2, 1) }),//input port2
       $(go.Shape, "Rectangle", FromBottom(false),
-        { portId: "out10", alignment: new go.Spot(0.35, 1) }), //out10 of in8 in9
+        { portId: "port3", alignment: new go.Spot(0.35, 1) }),//output port3 of port1 port2
       $(go.Shape, "Rectangle", FromTop(true),
-        { portId: "in11", alignment: new go.Spot(0.5, 1) }),
+        { portId: "port4", alignment: new go.Spot(0.5, 1) }),//input port4
       $(go.Shape, "Rectangle", FromTop(true),
-        { portId: "in12", alignment: new go.Spot(0.65, 1) }),
+        { portId: "port5", alignment: new go.Spot(0.65, 1) }),//input port5
       $(go.Shape, "Rectangle", FromBottom(false),
-        { portId: "out13", alignment: new go.Spot(0.8, 1) }), //out13 of in11 in12
+        { portId: "port6", alignment: new go.Spot(0.8, 1) }),//output port6 of port4 port5
       $(go.Shape, "Rectangle", FromTop(true),
-        { portId: "in14", alignment: new go.Spot(0.95, 1) }), //gnd
+        { portId: "port7", alignment: new go.Spot(0.95, 1) }),//gnd port7
       $(go.TextBlock, { text: "And", stroke: "white" }),
     );
 
@@ -365,16 +365,16 @@ function initDiagram() {
   function getinput10(node:any){
     var input = [red,red,red,red,red,red,red,red,red,red]
     
-    input[0] = getvalue(node,"in1")!
-    input[1] = getvalue(node,"in2")!
-    input[2] = getvalue(node,"in3")!
-    input[3] = getvalue(node,"in5")!
-    input[4] = getvalue(node,"in6")!
-    input[5] = getvalue(node,"in8")!
-    input[6] = getvalue(node,"in9")!
-    input[7] = getvalue(node,"in11")!
-    input[8] = getvalue(node,"in12")!
-    input[9] = getvalue(node,"in14")!
+    input[0] = getvalue(node,"port14")!
+    input[1] = getvalue(node,"port13")!
+    input[2] = getvalue(node,"port12")!
+    input[3] = getvalue(node,"port10")!
+    input[4] = getvalue(node,"port9")!
+    input[5] = getvalue(node,"port1")!
+    input[6] = getvalue(node,"port2")!
+    input[7] = getvalue(node,"port4")!
+    input[8] = getvalue(node,"port5")!
+    input[9] = getvalue(node,"port7")!
 
     return input
   }
@@ -384,17 +384,17 @@ function initDiagram() {
 
     if(input[0]===green && input[9]===green){ //vcc and gnd must active
 
-      if(input[1]===green && input[2]===green) setvalue(node,"out4",green)
-      else setvalue(node,"out4",red)
+      if(input[1]===green && input[2]===green) {setvalue(node,"port11",green);}
+      else setvalue(node,"port11",red)
 
-      if(input[3]===green && input[4]===green) setvalue(node,"out7",green)
-      else setvalue(node,"out7",red)
+      if(input[3]===green && input[4]===green) {setvalue(node,"port8",green);}
+      else setvalue(node,"port8",red)
 
-      if(input[5]===green && input[6]===green) setvalue(node,"out10",green)
-      else setvalue(node,"out10",red)
+      if(input[5]===green && input[6]===green) {setvalue(node,"port3",green);}
+      else setvalue(node,"port3",red)
 
-      if(input[7]===green && input[8]===green) setvalue(node,"out13",green)
-      else setvalue(node,"out13",red)
+      if(input[7]===green && input[8]===green) {setvalue(node,"port6",green);}
+      else setvalue(node,"port6",red)
 
     }
 
