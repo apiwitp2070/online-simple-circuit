@@ -24,7 +24,7 @@ function initDiagram() {
         "toolManager.mouseWheelBehavior": go.ToolManager.WheelZoom,
         "draggingTool.isGridSnapEnabled": true,
         'undoManager.isEnabled': true,
-        'clickCreatingTool.archetypeNodeData': { text: 'new text', color: 'lightblue' },
+        'clickCreatingTool.archetypeNodeData': { text: 'new text', editable: true, color: 'lightblue' },
         'initialScale': 1.5,
       });
   
@@ -112,6 +112,20 @@ function initDiagram() {
     }
   }
 
+  function ledStyle() {
+    return {
+      fill: "red",
+      desiredSize: new go.Size(20, 40),
+    }
+  }
+
+  function resistorStyle() {
+    return {
+      fill: "#D9CAB3",
+      desiredSize: new go.Size(60, 20),
+    }
+  }
+
   // for bottom output port and top input port
   function FromBottom(input: any) {
     return {
@@ -121,6 +135,7 @@ function initDiagram() {
       fromLinkable: !input,
       toSpot: go.Spot.Top,
       toLinkable: input,
+      toMaxLinks: 1,
       cursor: "pointer"
     };
   }
@@ -134,6 +149,7 @@ function initDiagram() {
       fromLinkable: !input,
       toSpot: go.Spot.Bottom,
       toLinkable: input,
+      toMaxLinks: 1,
       cursor: "pointer"
     };
   }
@@ -147,6 +163,7 @@ function initDiagram() {
       fromLinkable: !input,
       toSpot: go.Spot.Left,
       toLinkable: input,
+      toMaxLinks: 1,
       cursor: "pointer"
     };
   }
@@ -478,15 +495,34 @@ function initDiagram() {
 
   var ledTemplate = 
     $(go.Node, "Spot", nodeStyle(),
-      $(go.Shape, "Rectangle", shapeStyle()),
+      $(go.Shape, "Rectangle", ledStyle()),
       $(go.TextBlock, { text: "led", stroke: "white" }),
     );
 
   var resistorTemplate = 
     $(go.Node, "Spot", nodeStyle(),
-      $(go.Shape, "Rectangle", shapeStyle()),
-      $(go.TextBlock, { text: "resistor", stroke: "white" }),
+      $(go.Shape, "RoundedRectangle", resistorStyle()),
+      $(go.Shape, "Rectangle", InoutPort(true),
+        { portId: "in", alignment: new go.Spot(0, 0.5) }),
+      $(go.Shape, "Rectangle", InoutPort(false),
+        { portId: "out", alignment: new go.Spot(1, 0.5) }),
+      $(go.Shape, {fill: "brown", desiredSize: new go.Size(5, 20), alignment: new go.Spot(0.2, 0.5)}),
+      $(go.Shape, {fill: "black", desiredSize: new go.Size(5, 20), alignment: new go.Spot(0.4, 0.5)}),
+      $(go.Shape, {fill: "orange", desiredSize: new go.Size(5, 20), alignment: new go.Spot(0.6, 0.5)}),
+      $(go.Shape, {fill: "#AB6D23", desiredSize: new go.Size(5, 20), alignment: new go.Spot(0.8, 0.5)}),   
   );
+
+  var twoWaySwitchTemplate =
+    $(go.Node, "Spot", nodeStyle(),
+      $(go.Shape, "Rectangle", shapeStyle()),
+      $(go.TextBlock, { text: "2-way switch", stroke: "white" }),
+    );
+
+    var threeWaySwitchTemplate =
+    $(go.Node, "Spot", nodeStyle(),
+      $(go.Shape, "Rectangle", shapeStyle()),
+      $(go.TextBlock, { text: "3-way switch", stroke: "white" }),
+    );
 
   // add the templates created above to diagram and palette
   diagram.nodeTemplateMap.add("clk", clkTemplate);
@@ -501,6 +537,8 @@ function initDiagram() {
   diagram.nodeTemplateMap.add("xnor", xnorTemplate);
   diagram.nodeTemplateMap.add("led", ledTemplate);
   diagram.nodeTemplateMap.add("resistor", resistorTemplate);
+  diagram.nodeTemplateMap.add("2ws", twoWaySwitchTemplate);
+  diagram.nodeTemplateMap.add("3ws", threeWaySwitchTemplate);
   diagram.nodeTemplateMap.add("dff", dffTemplate);
   
   // share the template map with the Palette
@@ -526,6 +564,8 @@ function initDiagram() {
   palette2.model.nodeDataArray = [
     { category: "led" },
     { category: "resistor" },
+    { category: "2ws" },
+    { category: "3ws" },
   ];
 
   loop();
