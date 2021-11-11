@@ -6,6 +6,7 @@ import { ReactDiagram } from 'gojs-react';
 
 import '../App.css';  // contains .diagram-component CSS
 
+var count=0;
 
 function initDiagram() {
 
@@ -72,7 +73,7 @@ function initDiagram() {
       },
       new go.Binding("isShadowed", "isSelected").ofObject(),
       $(go.Shape,
-        { name: "SHAPE", strokeWidth: 2, stroke: red , _oldval: red}), new go.Binding("stroke", "color").ofModel(), new go.Binding("_oldval", "text").ofModel());
+        { name: "SHAPE", strokeWidth: 2, stroke: red , parameter1: 0}), new go.Binding("stroke", "color").ofModel(), new go.Binding("parameter1", "value")/*.ofModel()*/);
         
     
   // node template helpers (Tooltip when hover with mouse)
@@ -192,8 +193,17 @@ function initDiagram() {
       $(go.Shape, "Square", shapeStyle(),
         { fill: "grey" }),
       $(go.Shape, "Rectangle", InoutPort(true),
-        { portId: "", alignment: new go.Spot(0, 0.5) })
+        { portId: "", alignment: new go.Spot(0, 0.5)}, new go.Binding("fill", "color").ofModel())
     );
+
+  var clkTemplate =
+  $(go.Node, "Spot", nodeStyle(),
+    $(go.Shape, "Rectangle", shapeStyle(),
+      { fill: red }),
+    $(go.Shape, "Rectangle", InoutPort(false),
+      { portId: "", alignment: new go.Spot(1.01, 0.5) }, new go.Binding("fill", "color").ofModel()),
+    $(go.TextBlock, { text: "clk T=1500ms", stroke: "white"  }),
+  );
 
   var andTemplate =
     $(go.Node, "Spot", nodeStyle(),
@@ -515,6 +525,7 @@ function initDiagram() {
     );
 
   // add the templates created above to diagram and palette
+  diagram.nodeTemplateMap.add("clk", clkTemplate);
   diagram.nodeTemplateMap.add("input", inputTemplate);
   diagram.nodeTemplateMap.add("output", outputTemplate);
   diagram.nodeTemplateMap.add("and", andTemplate);
@@ -538,6 +549,7 @@ function initDiagram() {
   palette.model.nodeDataArray = [
     { category: "input" },
     { category: "output" },
+    { category: "clk" },
     { category: "and" },
     { category: "or" },
     { category: "xor" },
@@ -560,6 +572,10 @@ function initDiagram() {
 
   function loop() {
     setTimeout(function() { updateStates(); loop(); }, 250);
+    count=count+1;
+    if(count%60===0){
+      count=0;
+    }
   }
   
   function updateStates() {
@@ -574,6 +590,7 @@ function initDiagram() {
     // now we can do all other kinds of nodes
     diagram.nodes.each(function(node) {
       switch (node.category) {
+        case "clk": doClk(node); break;
         case "and": doAnd(node); break;
         case "or": doOr(node); break;
         case "xor": doXor(node); break;
@@ -613,12 +630,16 @@ function initDiagram() {
 
   function getoldvalue(node:any,pid:any){
     var value
-    node.findLinksInto(pid).each( function(link:any) {value=link.findObject("SHAPE")._oldval})
+    node.findLinksInto(pid).each( function(link:any) {value=link.findObject("SHAPE").parameter1})
     return value
   }
 
   function setvalue(node:any,pid:any,val:any){
     node.findLinksOutOf(pid).each( function(link:any) {link.findObject("SHAPE").stroke=val})
+  }
+
+  function setoldvalue(node:any,pid:any,val:any){
+    node.findLinksOutOf(pid).each( function(link:any) {link.findObject("SHAPE").parameter1=val})
   }
 
   function getinput10(node:any){
@@ -670,6 +691,19 @@ function initDiagram() {
 
 
     return input
+  }
+
+  function doClk(node:any) {
+    if(count%6===0){
+      if(node.findObject("NODESHAPE").fill===green){
+        node.findObject("NODESHAPE").fill=red
+      }
+      else{
+        node.findObject("NODESHAPE").fill=green
+      }
+      setOutputLinks(node, node.findObject("NODESHAPE").fill)
+    }
+
   }
 
   function doAnd(node:any) {
@@ -836,6 +870,57 @@ function initDiagram() {
 
   function doDff(node:any) {
     var input = getinputdff(node)
+
+    //console.log(getoldvalue(node,"port9"))
+
+    if(input[0]===green && input[9]===green){ //vcc and gnd must active
+
+      if(input[1]===green){ //check clr
+        setvalue(node,"port9",red)
+        setvalue(node,"port8",green)
+      }
+      else if(input[4]===green){ //check pre
+        setvalue(node,"port9",green)
+        setvalue(node,"port8",red)
+      }
+      else if(input[3]===green){ //check clk change
+        //console.log(input)
+        if(input[2]===green) {setvalue(node,"port9",green)}
+        else {setvalue(node,"port9",red)}
+
+        if(input[2]===green) {setvalue(node,"port8",red)}
+        else setvalue(node,"port8",green)
+
+      }
+
+      console.log(input)
+
+
+      //----------------------------------------------
+
+
+
+      if(input[5]===green){ //check clr
+        setvalue(node,"port9",red)
+        setvalue(node,"port8",green)
+      }
+      else if(input[8]===green){ //check pre
+        setvalue(node,"port9",green)
+        setvalue(node,"port8",red)
+      }
+      else if(input[7]===green){ //check clk change
+
+        if(input[6]===green) {setvalue(node,"port5",green)}
+        else {setvalue(node,"port5",red)}
+
+        if(input[6]===green) {setvalue(node,"port6",red)}
+        else setvalue(node,"port6",green)
+
+      }
+      
+      
+    }
+
   }
 
   function doOutput(node:any) {
