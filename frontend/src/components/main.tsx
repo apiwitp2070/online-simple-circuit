@@ -5,6 +5,8 @@ import * as go from 'gojs';
 import { ReactDiagram } from 'gojs-react';
 
 import '../App.css';  // contains .diagram-component CSS
+import { shapeStyle, nodeEllipse, ledStyle, resistorStyle, sevenSegmentStyle } from './node/nodeStyle';
+import { FromBottom, FromTop, InoutPort } from './node/portTemplate';
 
 var count=0;
 
@@ -74,7 +76,12 @@ function initDiagram() {
       new go.Binding("isShadowed", "isSelected").ofObject(),
       $(go.Shape,
         { name: "SHAPE", strokeWidth: 2, stroke: red , parameter1: 0}), new go.Binding("stroke", "color").ofModel(), new go.Binding("parameter1", "value")/*.ofModel()*/);
-        
+    
+  diagram.model = 
+    $(go.GraphLinksModel,
+      { linkFromPortIdProperty: "fromPort",  // required information:
+        linkToPortIdProperty: "toPort",      // identifies data property names
+    });
     
   // node template helpers (Tooltip when hover with mouse)
   var sharedToolTip =
@@ -96,78 +103,6 @@ function initDiagram() {
       toolTip: sharedToolTip
     }];
   }
-
-  function shapeStyle() {
-    return {
-      name: "NODESHAPE",
-      fill: "black",
-      desiredSize: new go.Size(100, 40),
-    };
-  }
-
-  function nodeEllipse() {
-    return {
-      fill: "gray",
-      desiredSize: new go.Size(8, 12),
-    }
-  }
-
-  function ledStyle() {
-    return {
-      fill: "red",
-      desiredSize: new go.Size(20, 40),
-    }
-  }
-
-  function resistorStyle() {
-    return {
-      fill: "#D9CAB3",
-      desiredSize: new go.Size(60, 20),
-    }
-  }
-
-  // for bottom output port and top input port
-  function FromBottom(input: any) {
-    return {
-      desiredSize: new go.Size(6, 6),
-      fill: "#c3c6cd",
-      fromSpot: go.Spot.Bottom,
-      fromLinkable: !input,
-      toSpot: go.Spot.Top,
-      toLinkable: input,
-      toMaxLinks: 1,
-      cursor: "pointer"
-    };
-  }
-  
-  // for top output port and bottom input port
-  function FromTop(input: any) {
-    return {
-      desiredSize: new go.Size(6, 6),
-      fill: "#c3c6cd",
-      fromSpot: go.Spot.Top,
-      fromLinkable: !input,
-      toSpot: go.Spot.Bottom,
-      toLinkable: input,
-      toMaxLinks: 1,
-      cursor: "pointer"
-    };
-  }
-
-  // for input and output
-  function InoutPort(input: any) {
-    return {
-      desiredSize: new go.Size(6, 6),
-      fill: "#c3c6cd",
-      fromSpot: go.Spot.Right, 
-      fromLinkable: !input,
-      toSpot: go.Spot.Left,
-      toLinkable: input,
-      toMaxLinks: 1,
-      cursor: "pointer"
-    };
-  }
-  
   
   // define templates for each type of node
 
@@ -518,10 +453,16 @@ function initDiagram() {
       $(go.TextBlock, { text: "2-way switch", stroke: "white" }),
     );
 
-    var threeWaySwitchTemplate =
+  var threeWaySwitchTemplate =
     $(go.Node, "Spot", nodeStyle(),
       $(go.Shape, "Rectangle", shapeStyle()),
       $(go.TextBlock, { text: "3-way switch", stroke: "white" }),
+    );
+
+  var sevenSegmentTemplate = 
+    $(go.Node, "Spot", nodeStyle(),
+      $(go.Shape, "Rectangle", sevenSegmentStyle()),
+      $(go.TextBlock, { text: "7 Segments", stroke: "white" }),
     );
 
   // add the templates created above to diagram and palette
@@ -539,13 +480,16 @@ function initDiagram() {
   diagram.nodeTemplateMap.add("resistor", resistorTemplate);
   diagram.nodeTemplateMap.add("2ws", twoWaySwitchTemplate);
   diagram.nodeTemplateMap.add("3ws", threeWaySwitchTemplate);
+  diagram.nodeTemplateMap.add("sevensegment", sevenSegmentTemplate);
   diagram.nodeTemplateMap.add("dff", dffTemplate);
   
   // share the template map with the Palette
   palette.nodeTemplateMap = diagram.nodeTemplateMap;
-  //will change to LED and such
+
+  // "Others" category palette
   palette2.nodeTemplateMap = diagram.nodeTemplateMap;
 
+  // Add something to palette 
   palette.model.nodeDataArray = [
     { category: "input" },
     { category: "output" },
@@ -560,12 +504,12 @@ function initDiagram() {
     { category: "dff" },
   ];
 
-  //will be changed to LED, resistor, etc.
   palette2.model.nodeDataArray = [
     { category: "led" },
     { category: "resistor" },
     { category: "2ws" },
     { category: "3ws" },
+    { category: "sevensegment"}
   ];
 
   loop();
