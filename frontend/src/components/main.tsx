@@ -883,8 +883,8 @@ function Main() {
           <div className="ml-4">
             <p>Drag an drop component from the right side</p>
             <div className="flex">
-              <h1 className="pr-5">Ctrl+Z: Undo</h1>
-              <h1 className="pr-5">Ctrl+Y: Redo</h1>
+              <h1 className="pr-5">Ctrl+Z to Undo</h1>
+              <h1 className="pr-5">Ctrl+Y to Redo</h1>
               <h1>Mouse wheel to zoom in/out</h1>
             </div>
           </div>
