@@ -42,3 +42,10 @@ export function sevenSegmentStyle() {
     desiredSize: new go.Size(100, 150),
   }
 }
+
+export function numberPart() {
+  return {
+    fill: "white",
+    desiredSize: new go.Size(5, 55),
+  }
+}

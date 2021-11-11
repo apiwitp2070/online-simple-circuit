@@ -5,7 +5,7 @@ import * as go from 'gojs';
 import { ReactDiagram } from 'gojs-react';
 
 import '../App.css';  // contains .diagram-component CSS
-import { shapeStyle, nodeEllipse, ledStyle, resistorStyle, sevenSegmentStyle } from './node/nodeStyle';
+import { shapeStyle, nodeEllipse, ledStyle, resistorStyle, sevenSegmentStyle, numberPart } from './node/nodeStyle';
 import { FromBottom, FromTop, InoutPort } from './node/portTemplate';
 
 var count=0;
@@ -77,6 +77,7 @@ function initDiagram() {
       $(go.Shape,
         { name: "SHAPE", strokeWidth: 2, stroke: red , parameter1: 0}), new go.Binding("stroke", "color").ofModel(), new go.Binding("parameter1", "value")/*.ofModel()*/);
     
+  // Graph link model to identify the port
   diagram.model = 
     $(go.GraphLinksModel,
       { linkFromPortIdProperty: "fromPort",  // required information:
@@ -132,13 +133,13 @@ function initDiagram() {
     );
 
   var clkTemplate =
-  $(go.Node, "Spot", nodeStyle(),
-    $(go.Shape, "Rectangle", shapeStyle(),
-      { fill: red }),
-    $(go.Shape, "Rectangle", InoutPort(false),
-      { portId: "", alignment: new go.Spot(1.01, 0.5) }, new go.Binding("fill", "color").ofModel()),
-    $(go.TextBlock, { text: "clk T=1500ms", stroke: "white"  }),
-  );
+    $(go.Node, "Spot", nodeStyle(),
+      $(go.Shape, "Rectangle", shapeStyle(),
+        { fill: red }),
+      $(go.Shape, "Rectangle", InoutPort(false),
+        { portId: "", alignment: new go.Spot(1.01, 0.5) }, new go.Binding("fill", "color").ofModel()),
+      $(go.TextBlock, { text: "clk T=1500ms", stroke: "white"  }),
+    );
 
   var andTemplate =
     $(go.Node, "Spot", nodeStyle(),
@@ -462,7 +463,42 @@ function initDiagram() {
   var sevenSegmentTemplate = 
     $(go.Node, "Spot", nodeStyle(),
       $(go.Shape, "Rectangle", sevenSegmentStyle()),
-      $(go.TextBlock, { text: "7 Segments", stroke: "white" }),
+      $(go.Shape, "Rectangle", FromBottom(true),
+        { portId: "portG", alignment: new go.Spot(0.1, 0) }),//G
+        $(go.Shape, "Rectangle", numberPart(),
+          { angle: 90, alignment: new go.Spot(0.4, 0.5)}),
+      $(go.Shape, "Rectangle", FromBottom(true),
+        { portId: "portF", alignment: new go.Spot(0.3, 0) }),//F
+        $(go.Shape, "Rectangle", numberPart(),
+          { alignment: new go.Spot(0.1, 0.3)}),
+      $(go.Shape, "Rectangle", FromBottom(true),
+        { portId: "portVcc", alignment: new go.Spot(0.5, 0) }),//vcc
+      $(go.Shape, "Rectangle", FromBottom(true),
+        { portId: "portA", alignment: new go.Spot(0.7, 0) }),//A
+        $(go.Shape, "Rectangle", numberPart(),
+          { angle: 90, alignment: new go.Spot(0.4, 0.1)}),
+      $(go.Shape, "Rectangle", FromBottom(true),
+        { portId: "portB", alignment: new go.Spot(0.9, 0) }),//B
+        $(go.Shape, "Rectangle", numberPart(),
+          { alignment: new go.Spot(0.7, 0.3)}),
+      $(go.Shape, "Rectangle", FromTop(true),
+        { portId: "portE", alignment: new go.Spot(0.1, 1) }),//E
+        $(go.Shape, "Rectangle", numberPart(),
+          { alignment: new go.Spot(0.1, 0.7)}),
+      $(go.Shape, "Rectangle", FromTop(true),
+        { portId: "portD", alignment: new go.Spot(0.3, 1) }),//D
+        $(go.Shape, "Rectangle", numberPart(),
+          { angle: 90, alignment: new go.Spot(0.4, 0.9)}),
+      $(go.Shape, "Rectangle", FromTop(true),
+        { portId: "portCom", alignment: new go.Spot(0.5, 1) }),//Com 
+      $(go.Shape, "Rectangle", FromTop(true),
+        { portId: "portC", alignment: new go.Spot(0.7, 1) }),//C
+        $(go.Shape, "Rectangle", numberPart(),
+          { alignment: new go.Spot(0.7, 0.7)}),
+      $(go.Shape, "Rectangle", FromTop(true),
+        { portId: "portDP", alignment: new go.Spot(0.9, 1) }),//DP
+      $(go.Shape, "Circle", 
+        { desiredSize: new go.Size(10, 10), fill: "white", alignment: new go.Spot(0.85, 0.9) }),
     );
 
   // add the templates created above to diagram and palette
@@ -929,7 +965,7 @@ function Main() {
           <div className="p-2 border-t border-b border-black flex justify-between bg-blue-100">
             <h1>Others</h1>
           </div>
-          <div style={{height: "30vh"}} className="bg-gray-100" id="palette2"></div>
+          <div style={{height: "40vh"}} className="bg-gray-100" id="palette2"></div>
 
         </div>
 
