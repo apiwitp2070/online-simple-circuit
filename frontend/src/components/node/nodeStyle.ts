@@ -22,9 +22,23 @@ export  function nodeEllipse() {
   }
 }
 
-export function ledStyle() {
+export function ledRedStyle() {
   return {
-    fill: "red",
+    fill: "gray",
+    desiredSize: new go.Size(20, 40),
+  }
+}
+
+export function ledGreenStyle() {
+  return {
+    fill: "gray",
+    desiredSize: new go.Size(20, 40),
+  }
+}
+
+export function ledYellowStyle() {
+  return {
+    fill: "gray",
     desiredSize: new go.Size(20, 40),
   }
 }
@@ -45,7 +59,8 @@ export function sevenSegmentStyle() {
 
 export function numberPart() {
   return {
-    fill: "white",
+    stroke: "white",
+    fill: "black",
     desiredSize: new go.Size(5, 55),
   }
 }

@@ -5,7 +5,7 @@ import * as go from 'gojs';
 import { ReactDiagram } from 'gojs-react';
 
 import '../App.css';  // contains .diagram-component CSS
-import { shapeStyle, nodeEllipse, ledStyle, resistorStyle, sevenSegmentStyle, numberPart } from './node/nodeStyle';
+import { shapeStyle, nodeEllipse, ledRedStyle, ledYellowStyle, ledGreenStyle, resistorStyle, sevenSegmentStyle, numberPart } from './node/nodeStyle';
 import { FromBottom, FromTop, InoutPort } from './node/portTemplate';
 
 var count=0;
@@ -26,7 +26,6 @@ function initDiagram() {
         "toolManager.mouseWheelBehavior": go.ToolManager.WheelZoom,
         "draggingTool.isGridSnapEnabled": true,
         'undoManager.isEnabled': true,
-        'clickCreatingTool.archetypeNodeData': { text: 'new text', editable: true, color: 'lightblue' },
         'initialScale': 1.5,
       });
   
@@ -429,11 +428,35 @@ function initDiagram() {
     $(go.TextBlock, { text: "7474 dff", stroke: "white" }),
   );
 
-  var ledTemplate = 
+  var ledRedTemplate = 
     $(go.Node, "Spot", nodeStyle(),
-      $(go.Shape, "Rectangle", ledStyle()),
-      $(go.TextBlock, { text: "led", stroke: "white" }),
-    );
+    $(go.Shape, "Rectangle", ledRedStyle()),
+    $(go.Shape, "Rectangle", FromBottom(false),
+      { portId: "port1", alignment: new go.Spot(0.2, 1) }),//left port
+    $(go.Shape, "Rectangle", FromBottom(false),
+      { portId: "port2", alignment: new go.Spot(0.8, 1) }),//right port
+    $(go.TextBlock, { text: "led", stroke: "white" }),
+  );
+
+  var ledYellowTemplate = 
+    $(go.Node, "Spot", nodeStyle(),
+    $(go.Shape, "Rectangle", ledYellowStyle()),
+    $(go.Shape, "Rectangle", FromBottom(false),
+      { portId: "port1", alignment: new go.Spot(0.2, 1) }),//left port
+    $(go.Shape, "Rectangle", FromBottom(false),
+      { portId: "port2", alignment: new go.Spot(0.8, 1) }),//right port
+    $(go.TextBlock, { text: "led", stroke: "white" }),
+  );
+
+  var ledGreenTemplate = 
+    $(go.Node, "Spot", nodeStyle(),
+    $(go.Shape, "Rectangle", ledGreenStyle()),
+    $(go.Shape, "Rectangle", FromBottom(false),
+      { portId: "port1", alignment: new go.Spot(0.2, 1) }),//left port
+    $(go.Shape, "Rectangle", FromBottom(false),
+      { portId: "port2", alignment: new go.Spot(0.8, 1) }),//right port
+    $(go.TextBlock, { text: "led", stroke: "white" }),
+  );
 
   var resistorTemplate = 
     $(go.Node, "Spot", nodeStyle(),
@@ -512,7 +535,9 @@ function initDiagram() {
   diagram.nodeTemplateMap.add("nand", nandTemplate);
   diagram.nodeTemplateMap.add("nor", norTemplate);
   diagram.nodeTemplateMap.add("xnor", xnorTemplate);
-  diagram.nodeTemplateMap.add("led", ledTemplate);
+  diagram.nodeTemplateMap.add("led_red", ledRedTemplate);
+  diagram.nodeTemplateMap.add("led_yellow", ledYellowTemplate);
+  diagram.nodeTemplateMap.add("led_green", ledGreenTemplate);
   diagram.nodeTemplateMap.add("resistor", resistorTemplate);
   diagram.nodeTemplateMap.add("2ws", twoWaySwitchTemplate);
   diagram.nodeTemplateMap.add("3ws", threeWaySwitchTemplate);
@@ -541,7 +566,9 @@ function initDiagram() {
   ];
 
   palette2.model.nodeDataArray = [
-    { category: "led" },
+    { category: "led_red" },
+    { category: "led_yellow" },
+    { category: "led_green" },
     { category: "resistor" },
     { category: "2ws" },
     { category: "3ws" },
@@ -933,9 +960,6 @@ function Main() {
       <div className="absolute flex items-center w-full h-16 bg-black">
           <h1 className="mx-4 text-white text-4xl">OSC</h1>
           <h1 className="mx-8 text-white text-xl">File</h1>
-          <h1 className="mx-8 text-white text-xl">Edit</h1>
-          <h1 className="mx-8 text-white text-xl">Menu</h1>
-          <h1 className="mx-8 text-white text-xl">Menu</h1>
       </div>
 
       <div className="flex">
@@ -946,7 +970,7 @@ function Main() {
             nodeDataArray={[]}
           />
           <div className="ml-4">
-            <p>Drag an drop component from the right side</p>
+            <p>Drag and drop component from the right side</p>
             <div className="flex">
               <h1 className="pr-5">Ctrl+Z to Undo</h1>
               <h1 className="pr-5">Ctrl+Y to Redo</h1>
