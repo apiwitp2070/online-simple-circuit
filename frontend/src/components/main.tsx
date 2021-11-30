@@ -521,7 +521,7 @@ function initDiagram() {
       $(go.Shape, "Rectangle", FromTop(true),
         { portId: "portDP", alignment: new go.Spot(0.9, 1) }),//DP
       $(go.Shape, "Circle", 
-        { desiredSize: new go.Size(10, 10), fill: "white", alignment: new go.Spot(0.85, 0.9) }),
+        { desiredSize: new go.Size(10, 10), stroke: "white", fill: "black", alignment: new go.Spot(0.85, 0.9) }),
     );
 
   // add the templates created above to diagram and palette
@@ -958,8 +958,10 @@ function Main() {
   return (
     <div>
       <div className="absolute flex items-center w-full h-16 bg-black">
-          <h1 className="mx-4 text-white text-4xl">OSC</h1>
-          <h1 className="mx-8 text-white text-xl">File</h1>
+          <button className="mx-4 text-white text-4xl">OSC</button>
+          <button className="mx-8 text-white text-xl">New</button>
+          <button className="mx-8 text-white text-xl">Load</button>
+          <button className="mx-8 text-white text-xl">Save</button>
       </div>
 
       <div className="flex">
