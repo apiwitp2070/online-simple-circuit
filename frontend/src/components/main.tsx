@@ -5,7 +5,7 @@ import * as go from 'gojs';
 import { ReactDiagram } from 'gojs-react';
 
 import '../App.css';  // contains .diagram-component CSS
-import { shapeStyle, nodeEllipse, ledRedStyle, ledYellowStyle, ledGreenStyle, resistorStyle, sevenSegmentStyle, numberPart } from './node/nodeStyle';
+import { shapeStyle, nodeEllipse, ledRedStyle, ledYellowStyle, ledGreenStyle, resistorStyle, sevenSegmentStyle, numberPart, numberPartG, numberPartF, numberPartA, numberPartB, numberPartC,numberPartD,numberPartE } from './node/nodeStyle';
 import { FromBottom, FromTop, InoutPort } from './node/portTemplate';
 
 var count=0;
@@ -15,6 +15,7 @@ function initDiagram() {
   // define variable
   var red = "orangered";  // 0 or false
   var green = "forestgreen";  // 1 or true
+  var black = "black"
   var KAPPA = 4 * ((Math.sqrt(2) - 1) / 3);
 
 
@@ -488,40 +489,40 @@ function initDiagram() {
       $(go.Shape, "Rectangle", sevenSegmentStyle()),
       $(go.Shape, "Rectangle", FromBottom(true),
         { portId: "portG", alignment: new go.Spot(0.1, 0) }),//G
-        $(go.Shape, "Rectangle", numberPart(),
+        $(go.Shape, "Rectangle", numberPartG(),
           { angle: 90, alignment: new go.Spot(0.4, 0.5)}),
       $(go.Shape, "Rectangle", FromBottom(true),
         { portId: "portF", alignment: new go.Spot(0.3, 0) }),//F
-        $(go.Shape, "Rectangle", numberPart(),
+        $(go.Shape, "Rectangle", numberPartF(),
           { alignment: new go.Spot(0.1, 0.3)}),
       $(go.Shape, "Rectangle", FromBottom(true),
         { portId: "portVcc", alignment: new go.Spot(0.5, 0) }),//vcc
       $(go.Shape, "Rectangle", FromBottom(true),
         { portId: "portA", alignment: new go.Spot(0.7, 0) }),//A
-        $(go.Shape, "Rectangle", numberPart(),
+        $(go.Shape, "Rectangle", numberPartA(),
           { angle: 90, alignment: new go.Spot(0.4, 0.1)}),
       $(go.Shape, "Rectangle", FromBottom(true),
         { portId: "portB", alignment: new go.Spot(0.9, 0) }),//B
-        $(go.Shape, "Rectangle", numberPart(),
+        $(go.Shape, "Rectangle", numberPartB(),
           { alignment: new go.Spot(0.7, 0.3)}),
       $(go.Shape, "Rectangle", FromTop(true),
         { portId: "portE", alignment: new go.Spot(0.1, 1) }),//E
-        $(go.Shape, "Rectangle", numberPart(),
+        $(go.Shape, "Rectangle", numberPartE(),
           { alignment: new go.Spot(0.1, 0.7)}),
       $(go.Shape, "Rectangle", FromTop(true),
         { portId: "portD", alignment: new go.Spot(0.3, 1) }),//D
-        $(go.Shape, "Rectangle", numberPart(),
+        $(go.Shape, "Rectangle", numberPartD(),
           { angle: 90, alignment: new go.Spot(0.4, 0.9)}),
       $(go.Shape, "Rectangle", FromTop(true),
         { portId: "portCom", alignment: new go.Spot(0.5, 1) }),//Com 
       $(go.Shape, "Rectangle", FromTop(true),
         { portId: "portC", alignment: new go.Spot(0.7, 1) }),//C
-        $(go.Shape, "Rectangle", numberPart(),
+        $(go.Shape, "Rectangle", numberPartC(),
           { alignment: new go.Spot(0.7, 0.7)}),
       $(go.Shape, "Rectangle", FromTop(true),
         { portId: "portDP", alignment: new go.Spot(0.9, 1) }),//DP
       $(go.Shape, "Circle", 
-        { desiredSize: new go.Size(10, 10), stroke: "white", fill: "black", alignment: new go.Spot(0.85, 0.9) }),
+        { name:"DP",desiredSize: new go.Size(10, 10), stroke: "white", fill: "black", alignment: new go.Spot(0.85, 0.9) }),
     );
 
   // add the templates created above to diagram and palette
@@ -606,6 +607,7 @@ function initDiagram() {
         case "nor": doNor(node); break;
         case "xnor": doXnor(node); break;
         case "dff": doDff(node); break;
+        case "sevensegment": do7seg(node); break; 
         case "output": doOutput(node); break;
         case "input": break;  // doInput already called, above
       }
@@ -875,8 +877,43 @@ function initDiagram() {
     }
   }
 
+  function getinput7seg(node:any){
+    var input = [black,black,black,black,black,black,black,black,black,black]
+    //console.log(input)
+    input[0] = getvalue(node,"portA")!
+    input[1] = getvalue(node,"portB")!
+    input[2] = getvalue(node,"portC")!
+    input[3] = getvalue(node,"portD")!
+    input[4] = getvalue(node,"portE")!
+    input[5] = getvalue(node,"portF")!
+    input[6] = getvalue(node,"portG")!
+    input[7] = getvalue(node,"portVcc")!
+    input[8] = getvalue(node,"portCom")!
+    input[9] = getvalue(node,"portDP")!
+
+    return input
+  }
+
+  function do7seg(node:any){
+    var input = getinput7seg(node)
+    //console.log(input)
+    if(input[7]==green && input[8]==green){
+
+      if (input[0]==green) {node.findObject("A").fill=red} else {node.findObject("A").fill=black} 
+      if (input[1]==green) {node.findObject("B").fill=red} else {node.findObject("B").fill=black} 
+      if (input[2]==green) {node.findObject("C").fill=red} else {node.findObject("C").fill=black} 
+      if (input[3]==green) {node.findObject("D").fill=red} else {node.findObject("D").fill=black} 
+      if (input[4]==green) {node.findObject("E").fill=red} else {node.findObject("E").fill=black} 
+      if (input[5]==green) {node.findObject("F").fill=red} else {node.findObject("F").fill=black} 
+      if (input[6]==green) {node.findObject("G").fill=red} else {node.findObject("G").fill=black} 
+      if (input[9]==green) {node.findObject("DP").fill=red} else {node.findObject("DP").fill=black} 
+    
+    }
+  }
+
   function doDff(node:any) {
     var input = getinputdff(node)
+    //console.log("hello")
 
     //console.log(getoldvalue(node,"port9"))
 
@@ -900,7 +937,7 @@ function initDiagram() {
 
       }
 
-      console.log(input)
+      //console.log(input)
 
 
       //----------------------------------------------
