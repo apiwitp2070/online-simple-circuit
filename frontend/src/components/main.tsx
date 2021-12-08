@@ -5,7 +5,7 @@ import * as go from 'gojs';
 import { ReactDiagram } from 'gojs-react';
 
 import '../App.css';  // contains .diagram-component CSS
-import { shapeStyle, nodeEllipse, ledRedStyle, ledYellowStyle, ledGreenStyle, resistorStyle, sevenSegmentStyle, numberPart, numberPartG, numberPartF, numberPartA, numberPartB, numberPartC,numberPartD,numberPartE } from './node/nodeStyle';
+import { ICshapeStyle, nodeEllipse, ledRedStyle, ledYellowStyle, ledGreenStyle, resistorStyle, sevenSegmentStyle, numberPart, numberPartG, numberPartF, numberPartA, numberPartB, numberPartC,numberPartD,numberPartE, twoWayLineA, twoWayLineB } from './node/nodeStyle';
 import { FromBottom, FromTop, InoutPort } from './node/portTemplate';
 
 var count=0;
@@ -109,7 +109,7 @@ function initDiagram() {
 
   var inputTemplate =
     $(go.Node, "Spot", nodeStyle(),
-      $(go.Shape, "Circle", shapeStyle(),
+      $(go.Shape, "Circle", ICshapeStyle(),
         { fill: red }),
       $(go.Shape, "Rectangle", InoutPort(false),
         { portId: "", alignment: new go.Spot(0.4, 0.5) }, new go.Binding("fill", "color").ofModel()),
@@ -126,7 +126,7 @@ function initDiagram() {
 
   var outputTemplate =
     $(go.Node, "Spot", nodeStyle(),
-      $(go.Shape, "Square", shapeStyle(),
+      $(go.Shape, "Square", ICshapeStyle(),
         { fill: "grey" }),
       $(go.Shape, "Rectangle", InoutPort(true),
         { portId: "", alignment: new go.Spot(0, 0.5)}, new go.Binding("fill", "color").ofModel())
@@ -134,7 +134,7 @@ function initDiagram() {
 
   var clkTemplate =
     $(go.Node, "Spot", nodeStyle(),
-      $(go.Shape, "Rectangle", shapeStyle(),
+      $(go.Shape, "Rectangle", ICshapeStyle(),
         { fill: red }),
       $(go.Shape, "Rectangle", InoutPort(false),
         { portId: "", alignment: new go.Spot(1.01, 0.5) }, new go.Binding("fill", "color").ofModel()),
@@ -143,7 +143,7 @@ function initDiagram() {
 
   var andTemplate =
     $(go.Node, "Spot", nodeStyle(),
-      $(go.Shape, "Rectangle", shapeStyle()),
+      $(go.Shape, "Rectangle", ICshapeStyle()),
       $(go.Shape, "HalfEllipse", nodeEllipse(),
         { alignment: new go.Spot(0.05, 0.5)}),
       $(go.Shape, "Rectangle", FromBottom(true),
@@ -179,7 +179,7 @@ function initDiagram() {
 
   var orTemplate =
       $(go.Node, "Spot", nodeStyle(),
-      $(go.Shape, "Rectangle", shapeStyle()),
+      $(go.Shape, "Rectangle", ICshapeStyle()),
       $(go.Shape, "HalfEllipse", nodeEllipse(),
         { alignment: new go.Spot(0.05, 0.5)}),
       $(go.Shape, "Rectangle", FromBottom(true),
@@ -215,7 +215,7 @@ function initDiagram() {
 
   var xorTemplate =
       $(go.Node, "Spot", nodeStyle(),
-      $(go.Shape, "Rectangle", shapeStyle()),
+      $(go.Shape, "Rectangle", ICshapeStyle()),
       $(go.Shape, "HalfEllipse", nodeEllipse(),
         { alignment: new go.Spot(0.05, 0.5)}),
       $(go.Shape, "Rectangle", FromBottom(true),
@@ -251,7 +251,7 @@ function initDiagram() {
 
   var norTemplate =
     $(go.Node, "Spot", nodeStyle(),
-    $(go.Shape, "Rectangle", shapeStyle()),
+    $(go.Shape, "Rectangle", ICshapeStyle()),
     $(go.Shape, "HalfEllipse", nodeEllipse(),
       { alignment: new go.Spot(0.05, 0.5)}),
     $(go.Shape, "Rectangle", FromBottom(true),
@@ -287,7 +287,7 @@ function initDiagram() {
 
   var xnorTemplate =
     $(go.Node, "Spot", nodeStyle(),
-    $(go.Shape, "Rectangle", shapeStyle()),
+    $(go.Shape, "Rectangle", ICshapeStyle()),
     $(go.Shape, "HalfEllipse", nodeEllipse(),
       { alignment: new go.Spot(0.05, 0.5)}),
     $(go.Shape, "Rectangle", FromBottom(true),
@@ -323,7 +323,7 @@ function initDiagram() {
 
   var nandTemplate =
     $(go.Node, "Spot", nodeStyle(),
-    $(go.Shape, "Rectangle", shapeStyle()),
+    $(go.Shape, "Rectangle", ICshapeStyle()),
     $(go.Shape, "HalfEllipse", nodeEllipse(),
       { alignment: new go.Spot(0.05, 0.5)}),
     $(go.Shape, "Rectangle", FromBottom(true),
@@ -359,7 +359,7 @@ function initDiagram() {
 
   var notTemplate =
     $(go.Node, "Spot", nodeStyle(),
-    $(go.Shape, "Rectangle", shapeStyle()),
+    $(go.Shape, "Rectangle", ICshapeStyle()),
     $(go.Shape, "HalfEllipse", nodeEllipse(),
       { alignment: new go.Spot(0.05, 0.5)}),
     $(go.Shape, "Rectangle", FromBottom(true), //fb botout topin , ft topout botin
@@ -395,7 +395,7 @@ function initDiagram() {
 
   var dffTemplate =
     $(go.Node, "Spot", nodeStyle(),
-    $(go.Shape, "Rectangle", shapeStyle()),
+    $(go.Shape, "Rectangle", ICshapeStyle()),
     $(go.Shape, "HalfEllipse", nodeEllipse(),
       { alignment: new go.Spot(0.05, 0.5)}),
     $(go.Shape, "Rectangle", FromBottom(true),
@@ -474,13 +474,20 @@ function initDiagram() {
 
   var twoWaySwitchTemplate =
     $(go.Node, "Spot", nodeStyle(),
-      $(go.Shape, "Rectangle", shapeStyle()),
-      $(go.TextBlock, { text: "2-way switch", stroke: "white" }),
+      $(go.Shape, "Square", ICshapeStyle()),
+      $(go.Shape, "Rectangle", InoutPort(true),
+        { portId: "port1", alignment: new go.Spot(0, 0.2) }),
+      $(go.Shape, "Rectangle", InoutPort(true),
+        { portId: "port2", alignment: new go.Spot(0, 0.8) }),
+      $(go.Shape, "Rectangle", InoutPort(false),
+        { portId: "port3", alignment: new go.Spot(0.4, 0.5) }),
+      $(go.Shape, twoWayLineA(), { alignment: new go.Spot(0.2, 0.35), angle: -70 }),
+      //$(go.Shape, twoWayLineB(), { alignment: new go.Spot(0.2, 0.65), angle: 70 }),
     );
 
   var threeWaySwitchTemplate =
     $(go.Node, "Spot", nodeStyle(),
-      $(go.Shape, "Rectangle", shapeStyle()),
+      $(go.Shape, "Rectangle", ICshapeStyle()),
       $(go.TextBlock, { text: "3-way switch", stroke: "white" }),
     );
 
