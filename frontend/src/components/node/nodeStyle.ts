@@ -64,3 +64,66 @@ export function numberPart() {
     desiredSize: new go.Size(5, 55),
   }
 }
+
+export function numberPartA() {
+  return {
+    name: "A",
+    stroke: "white",
+    fill: "black",
+    desiredSize: new go.Size(5, 55),
+  }
+}
+
+export function numberPartB() {
+  return {
+    name: "B",
+    stroke: "white",
+    fill: "black",
+    desiredSize: new go.Size(5, 55),
+  }
+}
+
+export function numberPartC() {
+  return {
+    name: "C",
+    stroke: "white",
+    fill: "black",
+    desiredSize: new go.Size(5, 55),
+  }
+}
+
+export function numberPartD() {
+  return {
+    name: "D",
+    stroke: "white",
+    fill: "black",
+    desiredSize: new go.Size(5, 55),
+  }
+}
+
+export function numberPartE() {
+  return {
+    name: "E",
+    stroke: "white",
+    fill: "black",
+    desiredSize: new go.Size(5, 55),
+  }
+}
+
+export function numberPartF() {
+  return {
+    name: "F",
+    stroke: "white",
+    fill: "black",
+    desiredSize: new go.Size(5, 55),
+  }
+}
+
+export function numberPartG() {
+  return {
+    name: "G",
+    stroke: "white",
+    fill: "black",
+    desiredSize: new go.Size(5, 55),
+  }
+}
