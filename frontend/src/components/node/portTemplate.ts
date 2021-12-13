@@ -47,3 +47,30 @@ export function InoutPort(input: any) {
     cursor: "pointer"
   };
 }
+
+// for switch
+export function SwitchLeft() {
+  return {
+    desiredSize: new go.Size(6, 6),
+    fill: "#c3c6cd",
+    fromSpot: go.Spot.Left, 
+    fromLinkable: true,
+    toSpot: go.Spot.Left,
+    toLinkable: true,
+    toMaxLinks: 1,
+    cursor: "pointer"
+  };
+}
+
+export function SwitchRight() {
+  return {
+    desiredSize: new go.Size(6, 6),
+    fill: "#c3c6cd",
+    fromSpot: go.Spot.Right, 
+    fromLinkable: true,
+    toSpot: go.Spot.Right,
+    toLinkable: true,
+    toMaxLinks: 1,
+    cursor: "pointer"
+  };
+}

@@ -6,7 +6,7 @@ import { ReactDiagram } from 'gojs-react';
 
 import '../App.css';  // contains .diagram-component CSS
 import { ICshapeStyle, nodeEllipse, ledRedStyle, ledYellowStyle, ledGreenStyle, resistorStyle, sevenSegmentStyle, numberPart, numberPartG, numberPartF, numberPartA, numberPartB, numberPartC,numberPartD,numberPartE, twoWayLineA, twoWayLineB } from './node/nodeStyle';
-import { FromBottom, FromTop, InoutPort } from './node/portTemplate';
+import { FromBottom, FromTop, InoutPort, SwitchLeft, SwitchRight } from './node/portTemplate';
 
 var count=0;
 
@@ -472,23 +472,30 @@ function initDiagram() {
       $(go.Shape, {fill: "#AB6D23", desiredSize: new go.Size(5, 20), alignment: new go.Spot(0.8, 0.5)}),   
   );
 
-  var twoWaySwitchTemplate =
+  var twoWaySwitchBTemplate =
     $(go.Node, "Spot", nodeStyle(),
       $(go.Shape, "Square", ICshapeStyle()),
-      $(go.Shape, "Rectangle", InoutPort(true),
+      $(go.Shape, "Rectangle", SwitchLeft(),
         { portId: "port1", alignment: new go.Spot(0, 0.2) }),
-      $(go.Shape, "Rectangle", InoutPort(true),
+      $(go.Shape, "Rectangle", SwitchLeft(),
         { portId: "port2", alignment: new go.Spot(0, 0.8) }),
-      $(go.Shape, "Rectangle", InoutPort(false),
+      $(go.Shape, "Rectangle", SwitchRight(),
         { portId: "port3", alignment: new go.Spot(0.4, 0.5) }),
       $(go.Shape, twoWayLineA(), { alignment: new go.Spot(0.2, 0.35), angle: -70 }),
       //$(go.Shape, twoWayLineB(), { alignment: new go.Spot(0.2, 0.65), angle: 70 }),
     );
 
-  var threeWaySwitchTemplate =
+  var twoWaySwitchATemplate =
     $(go.Node, "Spot", nodeStyle(),
-      $(go.Shape, "Rectangle", ICshapeStyle()),
-      $(go.TextBlock, { text: "3-way switch", stroke: "white" }),
+      $(go.Shape, "Square", ICshapeStyle()),
+      $(go.Shape, "Rectangle", SwitchRight(),
+        { portId: "port1", alignment: new go.Spot(0.4, 0.2) }),
+      $(go.Shape, "Rectangle", SwitchRight(),
+        { portId: "port2", alignment: new go.Spot(0.4, 0.8) }),
+      $(go.Shape, "Rectangle", SwitchLeft(),
+        { portId: "port3", alignment: new go.Spot(0, 0.5) }),
+      $(go.Shape, twoWayLineA(), { alignment: new go.Spot(0.2, 0.65), angle: -70 }),
+      //$(go.Shape, twoWayLineB(), { alignment: new go.Spot(0.2, 0.35), angle: 70 }),
     );
 
   var sevenSegmentTemplate = 
@@ -547,8 +554,8 @@ function initDiagram() {
   diagram.nodeTemplateMap.add("led_yellow", ledYellowTemplate);
   diagram.nodeTemplateMap.add("led_green", ledGreenTemplate);
   diagram.nodeTemplateMap.add("resistor", resistorTemplate);
-  diagram.nodeTemplateMap.add("2ws", twoWaySwitchTemplate);
-  diagram.nodeTemplateMap.add("3ws", threeWaySwitchTemplate);
+  diagram.nodeTemplateMap.add("2wsa", twoWaySwitchATemplate);
+  diagram.nodeTemplateMap.add("2wsb", twoWaySwitchBTemplate);
   diagram.nodeTemplateMap.add("sevensegment", sevenSegmentTemplate);
   diagram.nodeTemplateMap.add("dff", dffTemplate);
   
@@ -578,8 +585,8 @@ function initDiagram() {
     { category: "led_yellow" },
     { category: "led_green" },
     { category: "resistor" },
-    { category: "2ws" },
-    { category: "3ws" },
+    { category: "2wsa" },
+    { category: "2wsb" },
     { category: "sevensegment"}
   ];
 
