@@ -9,6 +9,7 @@ import { ICshapeStyle, nodeEllipse, ledRedStyle, ledYellowStyle, ledGreenStyle, 
 import { FromBottom, FromTop, InoutPort, SwitchLeft, SwitchRight } from './node/portTemplate';
 
 var count=0;
+var jsonData = {};
 
 function initDiagram() {
 
@@ -472,6 +473,16 @@ function initDiagram() {
       $(go.Shape, {fill: "#AB6D23", desiredSize: new go.Size(5, 20), alignment: new go.Spot(0.8, 0.5)}),   
   );
 
+  var switchTemplate =
+    $(go.Node, "Spot", nodeStyle(),
+      $(go.Shape, "Square", ICshapeStyle()),
+      $(go.Shape, "Rectangle", InoutPort(true),
+        { portId: "in", alignment: new go.Spot(0, 0.5) }),
+      $(go.Shape, "Rectangle", InoutPort(false),
+        { portId: "out", alignment: new go.Spot(0.4, 0.5) }),
+      $(go.Shape, twoWayLineA(), { alignment: new go.Spot(0.2, 0.35), angle: 60 }),
+    );
+
   var twoWaySwitchBTemplate =
     $(go.Node, "Spot", nodeStyle(),
       $(go.Shape, "Square", ICshapeStyle()),
@@ -554,6 +565,7 @@ function initDiagram() {
   diagram.nodeTemplateMap.add("led_yellow", ledYellowTemplate);
   diagram.nodeTemplateMap.add("led_green", ledGreenTemplate);
   diagram.nodeTemplateMap.add("resistor", resistorTemplate);
+  diagram.nodeTemplateMap.add("switch", switchTemplate);
   diagram.nodeTemplateMap.add("2wsa", twoWaySwitchATemplate);
   diagram.nodeTemplateMap.add("2wsb", twoWaySwitchBTemplate);
   diagram.nodeTemplateMap.add("sevensegment", sevenSegmentTemplate);
@@ -585,6 +597,7 @@ function initDiagram() {
     { category: "led_yellow" },
     { category: "led_green" },
     { category: "resistor" },
+    { category: "switch" },
     { category: "2wsa" },
     { category: "2wsb" },
     { category: "sevensegment"}
@@ -985,6 +998,16 @@ function initDiagram() {
     // assume there is just one input link
     // we just need to update the node's Shape.fill
     node.linksConnected.each(function(link:any) { node.findObject("NODESHAPE").fill = link.findObject("SHAPE").stroke; });
+  }
+
+  function save() {
+    var data = diagram.model.toJson();
+    console.log(data);
+    diagram.isModified = false;
+  }
+
+  function load(Data: any) {
+    diagram.model = go.Model.fromJson(Data);
   }
 
   return diagram;
