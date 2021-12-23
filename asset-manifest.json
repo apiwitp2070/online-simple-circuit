@@ -1,8 +1,8 @@
 {
   "files": {
-    "main.css": "/online-simple-circuit/static/css/main.9e17da1a.chunk.css",
-    "main.js": "/online-simple-circuit/static/js/main.e7f2f8c8.chunk.js",
-    "main.js.map": "/online-simple-circuit/static/js/main.e7f2f8c8.chunk.js.map",
+    "main.css": "/online-simple-circuit/static/css/main.e8589e6e.chunk.css",
+    "main.js": "/online-simple-circuit/static/js/main.8516a22c.chunk.js",
+    "main.js.map": "/online-simple-circuit/static/js/main.8516a22c.chunk.js.map",
     "runtime-main.js": "/online-simple-circuit/static/js/runtime-main.3f314fb3.js",
     "runtime-main.js.map": "/online-simple-circuit/static/js/runtime-main.3f314fb3.js.map",
     "static/js/2.41c22bbe.chunk.js": "/online-simple-circuit/static/js/2.41c22bbe.chunk.js",
@@ -10,13 +10,13 @@
     "static/js/3.0d20d1e6.chunk.js": "/online-simple-circuit/static/js/3.0d20d1e6.chunk.js",
     "static/js/3.0d20d1e6.chunk.js.map": "/online-simple-circuit/static/js/3.0d20d1e6.chunk.js.map",
     "index.html": "/online-simple-circuit/index.html",
-    "static/css/main.9e17da1a.chunk.css.map": "/online-simple-circuit/static/css/main.9e17da1a.chunk.css.map",
+    "static/css/main.e8589e6e.chunk.css.map": "/online-simple-circuit/static/css/main.e8589e6e.chunk.css.map",
     "static/js/2.41c22bbe.chunk.js.LICENSE.txt": "/online-simple-circuit/static/js/2.41c22bbe.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.3f314fb3.js",
     "static/js/2.41c22bbe.chunk.js",
-    "static/css/main.9e17da1a.chunk.css",
-    "static/js/main.e7f2f8c8.chunk.js"
+    "static/css/main.e8589e6e.chunk.css",
+    "static/js/main.8516a22c.chunk.js"
   ]
 }
