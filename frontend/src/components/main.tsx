@@ -596,10 +596,10 @@ function initDiagram() {
     { category: "led_red" },
     { category: "led_yellow" },
     { category: "led_green" },
-    { category: "resistor" },
     { category: "switch" },
     { category: "2wsa" },
     { category: "2wsb" },
+    { category: "resistor" },
     { category: "sevensegment"}
   ];
 
@@ -1039,7 +1039,7 @@ function Main() {
       </div>
 
       <div className="flex">
-        <div className="mt-16 w-4/5 bg-gray-200 relative border-b border-black">
+        <div id="diagramDiv" className="mt-16 w-4/5 bg-gray-200 relative border-b border-black">
           <ReactDiagram
             initDiagram={initDiagram}
             divClassName='main-diagram'
@@ -1055,17 +1055,22 @@ function Main() {
           </div>
         </div>
 
-        <div style={{height: "90vh"}} className="mt-16 w-1/5 flex flex-col bg-gray-100 border border-black">
-
-          <div className="p-2 border-b border-black flex justify-between bg-blue-100">
-            <h1>IC Gate</h1>
+        <div style={{height: "90vh"}} className="tabs mt-16 w-1/5 flex flex-col bg-white border-l border-b border-black">
+          <div className="tab">
+            <input type="radio" id="rd1" name="rd" checked={true}></input>
+            <label className="tab-label" htmlFor="rd1">IC Gates</label>
+            <div className="tab-content">
+              <div id="palette" style={{height: '340px'}}></div>
+            </div>
           </div>
-          <div style={{height: "40vh"}} className="bg-gray-100" id="palette"></div>
 
-          <div className="p-2 border-t border-b border-black flex justify-between bg-blue-100">
-            <h1>Others</h1>
+          <div className="tab">
+            <input type="radio" id="rd2" name="rd"></input>
+            <label className="tab-label" htmlFor="rd2">Others items</label>
+            <div className="tab-content">
+              <div id="palette2" style={{height: '340px'}}></div>
+            </div>
           </div>
-          <div style={{height: "40vh"}} className="bg-gray-100" id="palette2"></div>
 
         </div>
 

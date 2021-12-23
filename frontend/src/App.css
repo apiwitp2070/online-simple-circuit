@@ -42,3 +42,85 @@
   height: 90%;
   background-color: #E5E7EB;
 }
+
+#diagramDiv canvas {
+  outline: none;
+}
+
+#palette canvas {
+  outline: none;
+}
+
+#palette2 canvas {
+  outline: none;
+}
+
+/* Accordion styles */
+.tabs {
+  overflow: hidden;
+}
+
+#rd1 {
+  display : none;
+}
+
+#rd2 {
+  display : none;
+}
+
+.tab {
+  width: 100%;
+  color: white;
+  overflow: hidden;
+}
+
+.tab-label {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5em;
+  background: #1F4963;
+  cursor: pointer;
+}
+
+.tab-label:hover {
+  background: #627f91;
+}
+
+.tab-label::after {
+  content: "❯";
+  width: 1em;
+  height: 1em;
+  text-align: center;
+  transition: all 0.35s;
+}
+
+.tab-content {
+  max-height: 0;
+  color: #2c3e50;
+  background: white;
+}
+
+.tab-close {
+  display: flex;
+  justify-content: flex-end;
+  padding: 1em;
+  font-size: 0.75em;
+  background: #2c3e50;
+  cursor: pointer;
+}
+
+.tab-close:hover {
+  background: #1a252f;
+}
+
+input:checked + .tab-label {
+  background: #1a252f;
+}
+
+input:checked + .tab-label::after {
+  transform: rotate(90deg);
+}
+
+input:checked ~ .tab-content {
+  max-height: 100vh;
+}
