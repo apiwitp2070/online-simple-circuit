@@ -433,9 +433,9 @@ function initDiagram() {
   var ledRedTemplate = 
     $(go.Node, "Spot", nodeStyle(),
     $(go.Shape, "Rectangle", ledRedStyle()),
-    $(go.Shape, "Rectangle", FromTop(true),
+    $(go.Shape, "Rectangle", FromBottom(false),
       { portId: "port1", alignment: new go.Spot(0.2, 1) }),//left port
-    $(go.Shape, "Rectangle", FromTop(true),
+    $(go.Shape, "Rectangle", FromBottom(false),
       { portId: "port2", alignment: new go.Spot(0.8, 1) }),//right port
     $(go.TextBlock, { text: "led", stroke: "white" }),
   );
@@ -443,9 +443,9 @@ function initDiagram() {
   var ledYellowTemplate = 
     $(go.Node, "Spot", nodeStyle(),
     $(go.Shape, "Rectangle", ledYellowStyle()),
-    $(go.Shape, "Rectangle", FromTop(true),
+    $(go.Shape, "Rectangle", FromBottom(false),
       { portId: "port1", alignment: new go.Spot(0.2, 1) }),//left port
-    $(go.Shape, "Rectangle", FromTop(true),
+    $(go.Shape, "Rectangle", FromBottom(false),
       { portId: "port2", alignment: new go.Spot(0.8, 1) }),//right port
     $(go.TextBlock, { text: "led", stroke: "white" }),
   );
@@ -453,9 +453,9 @@ function initDiagram() {
   var ledGreenTemplate = 
     $(go.Node, "Spot", nodeStyle(),
     $(go.Shape, "Rectangle", ledGreenStyle()),
-    $(go.Shape, "Rectangle", FromTop(true),
+    $(go.Shape, "Rectangle", FromBottom(false),
       { portId: "port1", alignment: new go.Spot(0.2, 1) }),//left port
-    $(go.Shape, "Rectangle", FromTop(true),
+    $(go.Shape, "Rectangle", FromBottom(false),
       { portId: "port2", alignment: new go.Spot(0.8, 1) }),//right port
     $(go.TextBlock, { text: "led", stroke: "white" }),
   );
@@ -481,16 +481,7 @@ function initDiagram() {
       $(go.Shape, "Rectangle", InoutPort(false),
         { portId: "out", alignment: new go.Spot(0.4, 0.5) }),
       $(go.Shape, twoWayLineA(), { alignment: new go.Spot(0.2, 0.35), angle: 60 }),
-      { // if double-clicked, an input node will change its value, represented by the color.
-        doubleClick: function(e, obj:any) {
-          e.diagram.startTransaction("Toggle Switch");
-          var shp = obj.findObject("NODESHAPE");
-          shp.fill = (shp.fill === green) ? black : green;
-          updateStates();
-          e.diagram.commitTransaction("Toggle Switch");
-      }}
     );
-    
 
   var twoWaySwitchBTemplate =
     $(go.Node, "Spot", nodeStyle(),
@@ -502,14 +493,6 @@ function initDiagram() {
       $(go.Shape, "Rectangle", SwitchRight(),
         { portId: "port3", alignment: new go.Spot(0.4, 0.5) }),
       $(go.Shape, twoWayLineA(), { alignment: new go.Spot(0.2, 0.35), angle: -70 }),
-      { // if double-clicked, an input node will change its value, represented by the color.
-        doubleClick: function(e, obj:any) {
-          e.diagram.startTransaction("Toggle Switch");
-          var shp = obj.findObject("NODESHAPE");
-          shp.fill = (shp.fill === green) ? black : green;
-          updateStates();
-          e.diagram.commitTransaction("Toggle Switch");
-      }}
       //$(go.Shape, twoWayLineB(), { alignment: new go.Spot(0.2, 0.65), angle: 70 }),
     );
 
@@ -523,14 +506,6 @@ function initDiagram() {
       $(go.Shape, "Rectangle", SwitchLeft(),
         { portId: "port3", alignment: new go.Spot(0, 0.5) }),
       $(go.Shape, twoWayLineA(), { alignment: new go.Spot(0.2, 0.65), angle: -70 }),
-      { // if double-clicked, an input node will change its value, represented by the color.
-        doubleClick: function(e, obj:any) {
-          e.diagram.startTransaction("Toggle Switch");
-          var shp = obj.findObject("NODESHAPE");
-          shp.fill = (shp.fill === green) ? black : green;
-          updateStates();
-          e.diagram.commitTransaction("Toggle Switch");
-      }}
       //$(go.Shape, twoWayLineB(), { alignment: new go.Spot(0.2, 0.35), angle: 70 }),
     );
 
@@ -661,13 +636,6 @@ function initDiagram() {
         case "dff": doDff(node); break;
         case "sevensegment": do7seg(node); break; 
         case "output": doOutput(node); break;
-        case "switch": doSwitch(node); break;
-        case "2wsa": do2SwitchA(node); break;
-        case "2wsb": do2SwitchB(node); break;
-        case "resistor" : doResistor(node); break;
-        case "led_green" : doLEDgreen(node); break;
-        case "led_yellow": doLEDyellow(node); break;
-        case "led_red": doLEDred(node); break;
         case "input": break;  // doInput already called, above
       }
     });
@@ -689,81 +657,6 @@ function initDiagram() {
   function doInput(node:any) {
     setOutputLinks(node, node.findObject("NODESHAPE").fill);
   }
-
-  function doSwitch(node:any){
-    var stat= node.findObject("NODESHAPE").fill
-    var input= getvalue(node,"in")!
-    if(stat==green){
-      setvalue(node,"out",input)
-    }
-    else{
-      setvalue(node,"out",red)
-    }
-  }
-
-  function do2SwitchA(node:any){
-    var stat= node.findObject("NODESHAPE").fill
-    var input = getvalue(node,"port3")!
-    if(stat==green){
-      setvalue(node,"port1",input)
-      setvalue(node,"port2",red)
-    }
-    else{
-      setvalue(node,"port1",red)
-      setvalue(node,"port2",input)
-    }
-  }
-
-  function do2SwitchB(node:any){
-    var stat= node.findObject("NODESHAPE").fill
-    var in1 = getvalue(node,"port1")!
-    var in2 = getvalue(node,"port2")!
-    if(stat==green){
-      setvalue(node,"port3",in2)
-    }
-    else{
-      setvalue(node,"port3",in1)
-    }
-  }
-
-  function doResistor(node:any){
-    var input = getvalue(node,"in")!
-    setvalue(node,"out",input)
-  }
-
-  function doLEDgreen(node:any){
-    var input = getvalue(node,"port1")!
-    var gnd = getvalue(node,"port2")
-    if(input==green && gnd==green){
-      node.findObject("LED").fill = green
-    }
-    else{
-      node.findObject("LED").fill = "grey"
-    }
-  }
-
-  function doLEDyellow(node:any){
-    var input = getvalue(node,"port1")!
-    var gnd = getvalue(node,"port2")
-    if(input==green && gnd==green){
-      node.findObject("LED").fill = "yellow"
-    }
-    else{
-      node.findObject("LED").fill = "grey"
-    }
-  }
-
-  function doLEDred(node:any){
-    var input = getvalue(node,"port1")!
-    var gnd = getvalue(node,"port2")
-    if(input==green && gnd==green){
-      node.findObject("LED").fill = red
-    }
-    else{
-      node.findObject("LED").fill = "grey"
-    }
-  }
-
 
   function getvalue(node:any,pid:any){
     var value
