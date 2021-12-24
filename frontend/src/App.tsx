@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
-import Main from './components/main';
+import Main from './components/online-simple-circuit';
 
 const App = () => {
   return(
