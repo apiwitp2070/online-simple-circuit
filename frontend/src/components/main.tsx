@@ -5,10 +5,11 @@ import * as go from 'gojs';
 import { ReactDiagram } from 'gojs-react';
 
 import '../App.css';  // contains .diagram-component CSS
-import { shapeStyle, nodeEllipse, ledRedStyle, ledYellowStyle, ledGreenStyle, resistorStyle, sevenSegmentStyle, numberPart, numberPartG, numberPartF, numberPartA, numberPartB, numberPartC,numberPartD,numberPartE } from './node/nodeStyle';
-import { FromBottom, FromTop, InoutPort } from './node/portTemplate';
+import { ICshapeStyle, nodeEllipse, ledRedStyle, ledYellowStyle, ledGreenStyle, resistorStyle, sevenSegmentStyle, numberPart, numberPartG, numberPartF, numberPartA, numberPartB, numberPartC,numberPartD,numberPartE, twoWayLineA, twoWayLineB } from './node/nodeStyle';
+import { FromBottom, FromTop, InoutPort, SwitchLeft, SwitchRight } from './node/portTemplate';
 
 var count=0;
+var jsonData = {};
 
 function initDiagram() {
 
@@ -109,7 +110,7 @@ function initDiagram() {
 
   var inputTemplate =
     $(go.Node, "Spot", nodeStyle(),
-      $(go.Shape, "Circle", shapeStyle(),
+      $(go.Shape, "Circle", ICshapeStyle(),
         { fill: red }),
       $(go.Shape, "Rectangle", InoutPort(false),
         { portId: "", alignment: new go.Spot(0.4, 0.5) }, new go.Binding("fill", "color").ofModel()),
@@ -126,7 +127,7 @@ function initDiagram() {
 
   var outputTemplate =
     $(go.Node, "Spot", nodeStyle(),
-      $(go.Shape, "Square", shapeStyle(),
+      $(go.Shape, "Square", ICshapeStyle(),
         { fill: "grey" }),
       $(go.Shape, "Rectangle", InoutPort(true),
         { portId: "", alignment: new go.Spot(0, 0.5)}, new go.Binding("fill", "color").ofModel())
@@ -134,7 +135,7 @@ function initDiagram() {
 
   var clkTemplate =
     $(go.Node, "Spot", nodeStyle(),
-      $(go.Shape, "Rectangle", shapeStyle(),
+      $(go.Shape, "Rectangle", ICshapeStyle(),
         { fill: red }),
       $(go.Shape, "Rectangle", InoutPort(false),
         { portId: "", alignment: new go.Spot(1.01, 0.5) }, new go.Binding("fill", "color").ofModel()),
@@ -143,7 +144,7 @@ function initDiagram() {
 
   var andTemplate =
     $(go.Node, "Spot", nodeStyle(),
-      $(go.Shape, "Rectangle", shapeStyle()),
+      $(go.Shape, "Rectangle", ICshapeStyle()),
       $(go.Shape, "HalfEllipse", nodeEllipse(),
         { alignment: new go.Spot(0.05, 0.5)}),
       $(go.Shape, "Rectangle", FromBottom(true),
@@ -179,7 +180,7 @@ function initDiagram() {
 
   var orTemplate =
       $(go.Node, "Spot", nodeStyle(),
-      $(go.Shape, "Rectangle", shapeStyle()),
+      $(go.Shape, "Rectangle", ICshapeStyle()),
       $(go.Shape, "HalfEllipse", nodeEllipse(),
         { alignment: new go.Spot(0.05, 0.5)}),
       $(go.Shape, "Rectangle", FromBottom(true),
@@ -215,7 +216,7 @@ function initDiagram() {
 
   var xorTemplate =
       $(go.Node, "Spot", nodeStyle(),
-      $(go.Shape, "Rectangle", shapeStyle()),
+      $(go.Shape, "Rectangle", ICshapeStyle()),
       $(go.Shape, "HalfEllipse", nodeEllipse(),
         { alignment: new go.Spot(0.05, 0.5)}),
       $(go.Shape, "Rectangle", FromBottom(true),
@@ -251,7 +252,7 @@ function initDiagram() {
 
   var norTemplate =
     $(go.Node, "Spot", nodeStyle(),
-    $(go.Shape, "Rectangle", shapeStyle()),
+    $(go.Shape, "Rectangle", ICshapeStyle()),
     $(go.Shape, "HalfEllipse", nodeEllipse(),
       { alignment: new go.Spot(0.05, 0.5)}),
     $(go.Shape, "Rectangle", FromBottom(true),
@@ -287,7 +288,7 @@ function initDiagram() {
 
   var xnorTemplate =
     $(go.Node, "Spot", nodeStyle(),
-    $(go.Shape, "Rectangle", shapeStyle()),
+    $(go.Shape, "Rectangle", ICshapeStyle()),
     $(go.Shape, "HalfEllipse", nodeEllipse(),
       { alignment: new go.Spot(0.05, 0.5)}),
     $(go.Shape, "Rectangle", FromBottom(true),
@@ -323,7 +324,7 @@ function initDiagram() {
 
   var nandTemplate =
     $(go.Node, "Spot", nodeStyle(),
-    $(go.Shape, "Rectangle", shapeStyle()),
+    $(go.Shape, "Rectangle", ICshapeStyle()),
     $(go.Shape, "HalfEllipse", nodeEllipse(),
       { alignment: new go.Spot(0.05, 0.5)}),
     $(go.Shape, "Rectangle", FromBottom(true),
@@ -359,7 +360,7 @@ function initDiagram() {
 
   var notTemplate =
     $(go.Node, "Spot", nodeStyle(),
-    $(go.Shape, "Rectangle", shapeStyle()),
+    $(go.Shape, "Rectangle", ICshapeStyle()),
     $(go.Shape, "HalfEllipse", nodeEllipse(),
       { alignment: new go.Spot(0.05, 0.5)}),
     $(go.Shape, "Rectangle", FromBottom(true), //fb botout topin , ft topout botin
@@ -395,7 +396,7 @@ function initDiagram() {
 
   var dffTemplate =
     $(go.Node, "Spot", nodeStyle(),
-    $(go.Shape, "Rectangle", shapeStyle()),
+    $(go.Shape, "Rectangle", ICshapeStyle()),
     $(go.Shape, "HalfEllipse", nodeEllipse(),
       { alignment: new go.Spot(0.05, 0.5)}),
     $(go.Shape, "Rectangle", FromBottom(true),
@@ -432,9 +433,9 @@ function initDiagram() {
   var ledRedTemplate = 
     $(go.Node, "Spot", nodeStyle(),
     $(go.Shape, "Rectangle", ledRedStyle()),
-    $(go.Shape, "Rectangle", FromBottom(false),
+    $(go.Shape, "Rectangle", FromTop(true),
       { portId: "port1", alignment: new go.Spot(0.2, 1) }),//left port
-    $(go.Shape, "Rectangle", FromBottom(false),
+    $(go.Shape, "Rectangle", FromTop(true),
       { portId: "port2", alignment: new go.Spot(0.8, 1) }),//right port
     $(go.TextBlock, { text: "led", stroke: "white" }),
   );
@@ -442,9 +443,9 @@ function initDiagram() {
   var ledYellowTemplate = 
     $(go.Node, "Spot", nodeStyle(),
     $(go.Shape, "Rectangle", ledYellowStyle()),
-    $(go.Shape, "Rectangle", FromBottom(false),
+    $(go.Shape, "Rectangle", FromTop(true),
       { portId: "port1", alignment: new go.Spot(0.2, 1) }),//left port
-    $(go.Shape, "Rectangle", FromBottom(false),
+    $(go.Shape, "Rectangle", FromTop(true),
       { portId: "port2", alignment: new go.Spot(0.8, 1) }),//right port
     $(go.TextBlock, { text: "led", stroke: "white" }),
   );
@@ -452,9 +453,9 @@ function initDiagram() {
   var ledGreenTemplate = 
     $(go.Node, "Spot", nodeStyle(),
     $(go.Shape, "Rectangle", ledGreenStyle()),
-    $(go.Shape, "Rectangle", FromBottom(false),
+    $(go.Shape, "Rectangle", FromTop(true),
       { portId: "port1", alignment: new go.Spot(0.2, 1) }),//left port
-    $(go.Shape, "Rectangle", FromBottom(false),
+    $(go.Shape, "Rectangle", FromTop(true),
       { portId: "port2", alignment: new go.Spot(0.8, 1) }),//right port
     $(go.TextBlock, { text: "led", stroke: "white" }),
   );
@@ -472,16 +473,65 @@ function initDiagram() {
       $(go.Shape, {fill: "#AB6D23", desiredSize: new go.Size(5, 20), alignment: new go.Spot(0.8, 0.5)}),   
   );
 
-  var twoWaySwitchTemplate =
+  var switchTemplate =
     $(go.Node, "Spot", nodeStyle(),
-      $(go.Shape, "Rectangle", shapeStyle()),
-      $(go.TextBlock, { text: "2-way switch", stroke: "white" }),
+      $(go.Shape, "Square", ICshapeStyle()),
+      $(go.Shape, "Rectangle", InoutPort(true),
+        { portId: "in", alignment: new go.Spot(0, 0.5) }),
+      $(go.Shape, "Rectangle", InoutPort(false),
+        { portId: "out", alignment: new go.Spot(0.4, 0.5) }),
+      $(go.Shape, twoWayLineA(), { alignment: new go.Spot(0.2, 0.35), angle: 60 }),
+      { // if double-clicked, an input node will change its value, represented by the color.
+        doubleClick: function(e, obj:any) {
+          e.diagram.startTransaction("Toggle Switch");
+          var shp = obj.findObject("NODESHAPE");
+          shp.fill = (shp.fill === green) ? black : green;
+          updateStates();
+          e.diagram.commitTransaction("Toggle Switch");
+      }}
+    );
+    
+
+  var twoWaySwitchBTemplate =
+    $(go.Node, "Spot", nodeStyle(),
+      $(go.Shape, "Square", ICshapeStyle()),
+      $(go.Shape, "Rectangle", SwitchLeft(),
+        { portId: "port1", alignment: new go.Spot(0, 0.2) }),
+      $(go.Shape, "Rectangle", SwitchLeft(),
+        { portId: "port2", alignment: new go.Spot(0, 0.8) }),
+      $(go.Shape, "Rectangle", SwitchRight(),
+        { portId: "port3", alignment: new go.Spot(0.4, 0.5) }),
+      $(go.Shape, twoWayLineA(), { alignment: new go.Spot(0.2, 0.35), angle: -70 }),
+      { // if double-clicked, an input node will change its value, represented by the color.
+        doubleClick: function(e, obj:any) {
+          e.diagram.startTransaction("Toggle Switch");
+          var shp = obj.findObject("NODESHAPE");
+          shp.fill = (shp.fill === green) ? black : green;
+          updateStates();
+          e.diagram.commitTransaction("Toggle Switch");
+      }}
+      //$(go.Shape, twoWayLineB(), { alignment: new go.Spot(0.2, 0.65), angle: 70 }),
     );
 
-  var threeWaySwitchTemplate =
+  var twoWaySwitchATemplate =
     $(go.Node, "Spot", nodeStyle(),
-      $(go.Shape, "Rectangle", shapeStyle()),
-      $(go.TextBlock, { text: "3-way switch", stroke: "white" }),
+      $(go.Shape, "Square", ICshapeStyle()),
+      $(go.Shape, "Rectangle", SwitchRight(),
+        { portId: "port1", alignment: new go.Spot(0.4, 0.2) }),
+      $(go.Shape, "Rectangle", SwitchRight(),
+        { portId: "port2", alignment: new go.Spot(0.4, 0.8) }),
+      $(go.Shape, "Rectangle", SwitchLeft(),
+        { portId: "port3", alignment: new go.Spot(0, 0.5) }),
+      $(go.Shape, twoWayLineA(), { alignment: new go.Spot(0.2, 0.65), angle: -70 }),
+      { // if double-clicked, an input node will change its value, represented by the color.
+        doubleClick: function(e, obj:any) {
+          e.diagram.startTransaction("Toggle Switch");
+          var shp = obj.findObject("NODESHAPE");
+          shp.fill = (shp.fill === green) ? black : green;
+          updateStates();
+          e.diagram.commitTransaction("Toggle Switch");
+      }}
+      //$(go.Shape, twoWayLineB(), { alignment: new go.Spot(0.2, 0.35), angle: 70 }),
     );
 
   var sevenSegmentTemplate = 
@@ -540,8 +590,9 @@ function initDiagram() {
   diagram.nodeTemplateMap.add("led_yellow", ledYellowTemplate);
   diagram.nodeTemplateMap.add("led_green", ledGreenTemplate);
   diagram.nodeTemplateMap.add("resistor", resistorTemplate);
-  diagram.nodeTemplateMap.add("2ws", twoWaySwitchTemplate);
-  diagram.nodeTemplateMap.add("3ws", threeWaySwitchTemplate);
+  diagram.nodeTemplateMap.add("switch", switchTemplate);
+  diagram.nodeTemplateMap.add("2wsa", twoWaySwitchATemplate);
+  diagram.nodeTemplateMap.add("2wsb", twoWaySwitchBTemplate);
   diagram.nodeTemplateMap.add("sevensegment", sevenSegmentTemplate);
   diagram.nodeTemplateMap.add("dff", dffTemplate);
   
@@ -570,9 +621,10 @@ function initDiagram() {
     { category: "led_red" },
     { category: "led_yellow" },
     { category: "led_green" },
+    { category: "switch" },
+    { category: "2wsa" },
+    { category: "2wsb" },
     { category: "resistor" },
-    { category: "2ws" },
-    { category: "3ws" },
     { category: "sevensegment"}
   ];
 
@@ -609,6 +661,13 @@ function initDiagram() {
         case "dff": doDff(node); break;
         case "sevensegment": do7seg(node); break; 
         case "output": doOutput(node); break;
+        case "switch": doSwitch(node); break;
+        case "2wsa": do2SwitchA(node); break;
+        case "2wsb": do2SwitchB(node); break;
+        case "resistor" : doResistor(node); break;
+        case "led_green" : doLEDgreen(node); break;
+        case "led_yellow": doLEDyellow(node); break;
+        case "led_red": doLEDred(node); break;
         case "input": break;  // doInput already called, above
       }
     });
@@ -630,6 +689,81 @@ function initDiagram() {
   function doInput(node:any) {
     setOutputLinks(node, node.findObject("NODESHAPE").fill);
   }
+
+  function doSwitch(node:any){
+    var stat= node.findObject("NODESHAPE").fill
+    var input= getvalue(node,"in")!
+    if(stat==green){
+      setvalue(node,"out",input)
+    }
+    else{
+      setvalue(node,"out",red)
+    }
+  }
+
+  function do2SwitchA(node:any){
+    var stat= node.findObject("NODESHAPE").fill
+    var input = getvalue(node,"port3")!
+    if(stat==green){
+      setvalue(node,"port1",input)
+      setvalue(node,"port2",red)
+    }
+    else{
+      setvalue(node,"port1",red)
+      setvalue(node,"port2",input)
+    }
+  }
+
+  function do2SwitchB(node:any){
+    var stat= node.findObject("NODESHAPE").fill
+    var in1 = getvalue(node,"port1")!
+    var in2 = getvalue(node,"port2")!
+    if(stat==green){
+      setvalue(node,"port3",in2)
+    }
+    else{
+      setvalue(node,"port3",in1)
+    }
+  }
+
+  function doResistor(node:any){
+    var input = getvalue(node,"in")!
+    setvalue(node,"out",input)
+  }
+
+  function doLEDgreen(node:any){
+    var input = getvalue(node,"port1")!
+    var gnd = getvalue(node,"port2")
+    if(input==green && gnd==green){
+      node.findObject("LED").fill = green
+    }
+    else{
+      node.findObject("LED").fill = "grey"
+    }
+  }
+
+  function doLEDyellow(node:any){
+    var input = getvalue(node,"port1")!
+    var gnd = getvalue(node,"port2")
+    if(input==green && gnd==green){
+      node.findObject("LED").fill = "yellow"
+    }
+    else{
+      node.findObject("LED").fill = "grey"
+    }
+  }
+
+  function doLEDred(node:any){
+    var input = getvalue(node,"port1")!
+    var gnd = getvalue(node,"port2")
+    if(input==green && gnd==green){
+      node.findObject("LED").fill = red
+    }
+    else{
+      node.findObject("LED").fill = "grey"
+    }
+  }
+
 
   function getvalue(node:any,pid:any){
     var value
@@ -973,6 +1107,16 @@ function initDiagram() {
     node.linksConnected.each(function(link:any) { node.findObject("NODESHAPE").fill = link.findObject("SHAPE").stroke; });
   }
 
+  function save() {
+    var data = diagram.model.toJson();
+    console.log(data);
+    diagram.isModified = false;
+  }
+
+  function load(Data: any) {
+    diagram.model = go.Model.fromJson(Data);
+  }
+
   return diagram;
 }
 
@@ -1002,7 +1146,7 @@ function Main() {
       </div>
 
       <div className="flex">
-        <div className="mt-16 w-4/5 bg-gray-200 relative border-b border-black">
+        <div id="diagramDiv" className="mt-16 w-4/5 bg-gray-200 relative border-b border-black">
           <ReactDiagram
             initDiagram={initDiagram}
             divClassName='main-diagram'
@@ -1018,17 +1162,22 @@ function Main() {
           </div>
         </div>
 
-        <div style={{height: "90vh"}} className="mt-16 w-1/5 flex flex-col bg-gray-100 border border-black">
-
-          <div className="p-2 border-b border-black flex justify-between bg-blue-100">
-            <h1>IC Gate</h1>
+        <div style={{height: "90vh"}} className="tabs mt-16 w-1/5 flex flex-col bg-white border-l border-b border-black">
+          <div className="tab">
+            <input type="radio" id="rd1" name="rd" checked={true}></input>
+            <label className="tab-label" htmlFor="rd1">IC Gates</label>
+            <div className="tab-content">
+              <div id="palette" style={{height: '340px'}}></div>
+            </div>
           </div>
-          <div style={{height: "40vh"}} className="bg-gray-100" id="palette"></div>
 
-          <div className="p-2 border-t border-b border-black flex justify-between bg-blue-100">
-            <h1>Others</h1>
+          <div className="tab">
+            <input type="radio" id="rd2" name="rd"></input>
+            <label className="tab-label" htmlFor="rd2">Others items</label>
+            <div className="tab-content">
+              <div id="palette2" style={{height: '340px'}}></div>
+            </div>
           </div>
-          <div style={{height: "40vh"}} className="bg-gray-100" id="palette2"></div>
 
         </div>
 

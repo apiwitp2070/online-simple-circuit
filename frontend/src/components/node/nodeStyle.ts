@@ -6,13 +6,13 @@ import { ReactDiagram } from 'gojs-react';
 import '../../App.css';  // contains .diagram-component CSS
 
 // black rectangle for IC
-export function shapeStyle() {
-    return {
-      name: "NODESHAPE",
-      fill: "black",
-      desiredSize: new go.Size(100, 40),
-    };
-  }
+export function ICshapeStyle() {
+  return {
+    name: "NODESHAPE",
+    fill: "black",
+    desiredSize: new go.Size(100, 40),
+  };
+}
 
 
 export  function nodeEllipse() {
@@ -24,6 +24,7 @@ export  function nodeEllipse() {
 
 export function ledRedStyle() {
   return {
+    name: "LED",
     fill: "gray",
     desiredSize: new go.Size(20, 40),
   }
@@ -31,6 +32,7 @@ export function ledRedStyle() {
 
 export function ledGreenStyle() {
   return {
+    name: "LED",
     fill: "gray",
     desiredSize: new go.Size(20, 40),
   }
@@ -38,6 +40,7 @@ export function ledGreenStyle() {
 
 export function ledYellowStyle() {
   return {
+    name: "LED",
     fill: "gray",
     desiredSize: new go.Size(20, 40),
   }
@@ -125,5 +128,23 @@ export function numberPartG() {
     stroke: "white",
     fill: "black",
     desiredSize: new go.Size(5, 55),
+  }
+}
+
+export function twoWayLineA() {
+  return {
+    name: "A",
+    stroke: "white",
+    fill: "white",
+    desiredSize: new go.Size(1,30),
+  }
+}
+
+export function twoWayLineB() {
+  return {
+    name: "B",
+    stroke: "white",
+    fill: "white",
+    desiredSize: new go.Size(1,30),
   }
 }
