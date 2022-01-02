@@ -17,7 +17,6 @@ function initDiagram() {
   var red = "orangered";  // 0 or false
   var green = "forestgreen";  // 1 or true
   var black = "black"
-  var white = "white"
   var KAPPA = 4 * ((Math.sqrt(2) - 1) / 3);
 
 
