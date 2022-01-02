@@ -5,7 +5,7 @@ import * as go from 'gojs';
 import { ReactDiagram } from 'gojs-react';
 
 import '../App.css';  // contains .diagram-component CSS
-import { ICshapeStyle, nodeEllipse, ledRedStyle, ledYellowStyle, ledGreenStyle, resistorStyle, sevenSegmentStyle, numberPart, numberPartG, numberPartF, numberPartA, numberPartB, numberPartC,numberPartD,numberPartE, twoWayLineA, twoWayLineB } from './node/nodeStyle';
+import { ICshapeStyle, nodeEllipse, ledRedStyle, ledYellowStyle, ledGreenStyle, resistorStyle, sevenSegmentStyle, numberPart, numberPartG, numberPartF, numberPartA, numberPartB, numberPartC,numberPartD,numberPartE, twoWayLineA, twoWayLineB, twoWayLineC } from './node/nodeStyle';
 import { FromBottom, FromTop, InoutPort, SwitchLeft, SwitchRight } from './node/portTemplate';
 
 var count=0;
@@ -17,6 +17,7 @@ function initDiagram() {
   var red = "orangered";  // 0 or false
   var green = "forestgreen";  // 1 or true
   var black = "black"
+  var white = "white"
   var KAPPA = 4 * ((Math.sqrt(2) - 1) / 3);
 
 
@@ -481,16 +482,41 @@ function initDiagram() {
       $(go.Shape, "Rectangle", InoutPort(false),
         { portId: "out", alignment: new go.Spot(0.4, 0.5) }),
       $(go.Shape, twoWayLineA(), { alignment: new go.Spot(0.2, 0.35), angle: 60 }),
-      { // if double-clicked, an input node will change its value, represented by the color.
+      $(go.Shape, twoWayLineC(), { alignment: new go.Spot(0.2, 0.5), angle: 90, opacity: 0, }),
+      { // double-click toggle switch on or off. represent by its line angle.
         doubleClick: function(e, obj:any) {
           e.diagram.startTransaction("Toggle Switch");
-          var shp = obj.findObject("NODESHAPE");
-          shp.fill = (shp.fill === green) ? black : green;
+          var lineA = obj.findObject("A"); //60 degree angle line
+          var lineC = obj.findObject("C"); //straight line when turn on switch
+          lineA.opacity = (lineA.opacity == 1) ? 0 : 1;
+          lineC.opacity = (lineC.opacity == 1) ? 0 : 1;
           updateStates();
           e.diagram.commitTransaction("Toggle Switch");
       }}
     );
     
+  var twoWaySwitchATemplate =
+    $(go.Node, "Spot", nodeStyle(),
+      $(go.Shape, "Square", ICshapeStyle()),
+      $(go.Shape, "Rectangle", SwitchRight(),
+        { portId: "port1", alignment: new go.Spot(0.4, 0.2) }),
+      $(go.Shape, "Rectangle", SwitchRight(),
+        { portId: "port2", alignment: new go.Spot(0.4, 0.8) }),
+      $(go.Shape, "Rectangle", SwitchLeft(),
+        { portId: "port3", alignment: new go.Spot(0, 0.5) }),
+      $(go.Shape, twoWayLineA(), { alignment: new go.Spot(0.2, 0.65), angle: -70 }),
+      $(go.Shape, twoWayLineB(), { alignment: new go.Spot(0.2, 0.35), angle: 70, opacity: 0 }),
+      { // if double-clicked, an input node will change its value, represented by the color.
+        doubleClick: function(e, obj:any) {
+          e.diagram.startTransaction("Toggle Switch");
+          var lineA = obj.findObject("A");
+          var lineB = obj.findObject("B");
+          lineA.opacity = (lineA.opacity == 1) ? 0 : 1;
+          lineB.opacity = (lineB.opacity == 1) ? 0 : 1;
+          updateStates();
+          e.diagram.commitTransaction("Toggle Switch");
+      }}
+    );
 
   var twoWaySwitchBTemplate =
     $(go.Node, "Spot", nodeStyle(),
@@ -502,36 +528,17 @@ function initDiagram() {
       $(go.Shape, "Rectangle", SwitchRight(),
         { portId: "port3", alignment: new go.Spot(0.4, 0.5) }),
       $(go.Shape, twoWayLineA(), { alignment: new go.Spot(0.2, 0.35), angle: -70 }),
-      { // if double-clicked, an input node will change its value, represented by the color.
+      $(go.Shape, twoWayLineB(), { alignment: new go.Spot(0.2, 0.65), angle: 70, opacity: 0 }),
+      { // double-click change the output port that input will be connect to, represent by its line.
         doubleClick: function(e, obj:any) {
           e.diagram.startTransaction("Toggle Switch");
-          var shp = obj.findObject("NODESHAPE");
-          shp.fill = (shp.fill === green) ? black : green;
+          var lineA = obj.findObject("A");
+          var lineB = obj.findObject("B");
+          lineA.opacity = (lineA.opacity == 1) ? 0 : 1;
+          lineB.opacity = (lineB.opacity == 1) ? 0 : 1;
           updateStates();
           e.diagram.commitTransaction("Toggle Switch");
       }}
-      //$(go.Shape, twoWayLineB(), { alignment: new go.Spot(0.2, 0.65), angle: 70 }),
-    );
-
-  var twoWaySwitchATemplate =
-    $(go.Node, "Spot", nodeStyle(),
-      $(go.Shape, "Square", ICshapeStyle()),
-      $(go.Shape, "Rectangle", SwitchRight(),
-        { portId: "port1", alignment: new go.Spot(0.4, 0.2) }),
-      $(go.Shape, "Rectangle", SwitchRight(),
-        { portId: "port2", alignment: new go.Spot(0.4, 0.8) }),
-      $(go.Shape, "Rectangle", SwitchLeft(),
-        { portId: "port3", alignment: new go.Spot(0, 0.5) }),
-      $(go.Shape, twoWayLineA(), { alignment: new go.Spot(0.2, 0.65), angle: -70 }),
-      { // if double-clicked, an input node will change its value, represented by the color.
-        doubleClick: function(e, obj:any) {
-          e.diagram.startTransaction("Toggle Switch");
-          var shp = obj.findObject("NODESHAPE");
-          shp.fill = (shp.fill === green) ? black : green;
-          updateStates();
-          e.diagram.commitTransaction("Toggle Switch");
-      }}
-      //$(go.Shape, twoWayLineB(), { alignment: new go.Spot(0.2, 0.35), angle: 70 }),
     );
 
   var sevenSegmentTemplate = 
@@ -691,9 +698,9 @@ function initDiagram() {
   }
 
   function doSwitch(node:any){
-    var stat= node.findObject("NODESHAPE").fill
+    var stat= node.findObject("C").opacity
     var input= getvalue(node,"in")!
-    if(stat==green){
+    if(stat==1){
       setvalue(node,"out",input)
     }
     else{
@@ -702,9 +709,9 @@ function initDiagram() {
   }
 
   function do2SwitchA(node:any){
-    var stat= node.findObject("NODESHAPE").fill
+    var stat= node.findObject("B").opacity
     var input = getvalue(node,"port3")!
-    if(stat==green){
+    if(stat==1){
       setvalue(node,"port1",input)
       setvalue(node,"port2",red)
     }
@@ -715,10 +722,10 @@ function initDiagram() {
   }
 
   function do2SwitchB(node:any){
-    var stat= node.findObject("NODESHAPE").fill
+    var stat= node.findObject("B").opacity
     var in1 = getvalue(node,"port1")!
     var in2 = getvalue(node,"port2")!
-    if(stat==green){
+    if(stat==1){
       setvalue(node,"port3",in2)
     }
     else{
