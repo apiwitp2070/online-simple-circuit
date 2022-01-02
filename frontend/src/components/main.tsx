@@ -433,9 +433,9 @@ function initDiagram() {
   var ledRedTemplate = 
     $(go.Node, "Spot", nodeStyle(),
     $(go.Shape, "Rectangle", ledRedStyle()),
-    $(go.Shape, "Rectangle", FromBottom(false),
+    $(go.Shape, "Rectangle", FromTop(true),
       { portId: "port1", alignment: new go.Spot(0.2, 1) }),//left port
-    $(go.Shape, "Rectangle", FromBottom(false),
+    $(go.Shape, "Rectangle", FromTop(true),
       { portId: "port2", alignment: new go.Spot(0.8, 1) }),//right port
     $(go.TextBlock, { text: "led", stroke: "white" }),
   );
@@ -443,9 +443,9 @@ function initDiagram() {
   var ledYellowTemplate = 
     $(go.Node, "Spot", nodeStyle(),
     $(go.Shape, "Rectangle", ledYellowStyle()),
-    $(go.Shape, "Rectangle", FromBottom(false),
+    $(go.Shape, "Rectangle", FromTop(true),
       { portId: "port1", alignment: new go.Spot(0.2, 1) }),//left port
-    $(go.Shape, "Rectangle", FromBottom(false),
+    $(go.Shape, "Rectangle", FromTop(true),
       { portId: "port2", alignment: new go.Spot(0.8, 1) }),//right port
     $(go.TextBlock, { text: "led", stroke: "white" }),
   );
@@ -453,9 +453,9 @@ function initDiagram() {
   var ledGreenTemplate = 
     $(go.Node, "Spot", nodeStyle(),
     $(go.Shape, "Rectangle", ledGreenStyle()),
-    $(go.Shape, "Rectangle", FromBottom(false),
+    $(go.Shape, "Rectangle", FromTop(true),
       { portId: "port1", alignment: new go.Spot(0.2, 1) }),//left port
-    $(go.Shape, "Rectangle", FromBottom(false),
+    $(go.Shape, "Rectangle", FromTop(true),
       { portId: "port2", alignment: new go.Spot(0.8, 1) }),//right port
     $(go.TextBlock, { text: "led", stroke: "white" }),
   );
@@ -667,6 +667,13 @@ function initDiagram() {
         case "dff": doDff(node); break;
         case "sevensegment": do7seg(node); break; 
         case "output": doOutput(node); break;
+        case "switch": doSwitch(node); break;
+        case "2wsa": do2SwitchA(node); break;
+        case "2wsb": do2SwitchB(node); break;
+        case "resistor" : doResistor(node); break;
+        case "led_green" : doLEDgreen(node); break;
+        case "led_yellow": doLEDyellow(node); break;
+        case "led_red": doLEDred(node); break;
         case "input": break;  // doInput already called, above
       }
     });
