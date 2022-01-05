@@ -741,10 +741,10 @@ function initDiagram() {
     var input = getvalue(node,"port1")!
     var gnd = getvalue(node,"port2")
     if(input==green && gnd==green){
-      node.findObject("LED").fill = green
+      node.findObject("LED_GREEN").fill = green
     }
     else{
-      node.findObject("LED").fill = "grey"
+      node.findObject("LED_GREEN").fill = "grey"
     }
   }
 
@@ -752,10 +752,10 @@ function initDiagram() {
     var input = getvalue(node,"port1")!
     var gnd = getvalue(node,"port2")
     if(input==green && gnd==green){
-      node.findObject("LED").fill = "yellow"
+      node.findObject("LED_YELLOW").fill = "yellow"
     }
     else{
-      node.findObject("LED").fill = "grey"
+      node.findObject("LED_YELLOW").fill = "grey"
     }
   }
 
@@ -763,10 +763,10 @@ function initDiagram() {
     var input = getvalue(node,"port1")!
     var gnd = getvalue(node,"port2")
     if(input==green && gnd==green){
-      node.findObject("LED").fill = red
+      node.findObject("LED_RED").fill = red
     }
     else{
-      node.findObject("LED").fill = "grey"
+      node.findObject("LED_RED").fill = "grey"
     }
   }
 

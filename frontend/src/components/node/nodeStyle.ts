@@ -24,6 +24,7 @@ export  function nodeEllipse() {
 
 export function ledRedStyle() {
   return {
+    name: "LED_RED",
     fill: "gray",
     desiredSize: new go.Size(20, 40),
   }
@@ -31,6 +32,7 @@ export function ledRedStyle() {
 
 export function ledGreenStyle() {
   return {
+    name: "LED_GREEN",
     fill: "gray",
     desiredSize: new go.Size(20, 40),
   }
@@ -38,6 +40,7 @@ export function ledGreenStyle() {
 
 export function ledYellowStyle() {
   return {
+    name: "LED_YELLOW",
     fill: "gray",
     desiredSize: new go.Size(20, 40),
   }
