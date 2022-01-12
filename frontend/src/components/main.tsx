@@ -142,8 +142,26 @@ function initDiagram() {
       $(go.Shape, "Rectangle", ICshapeStyle(),
         { fill: red }),
       $(go.Shape, "Rectangle", InoutPort(false),
-        { portId: "", alignment: new go.Spot(1.01, 0.5) }, new go.Binding("fill", "color").ofModel()),
+        { portId: "", alignment: new go.Spot(1, 0.5) }, new go.Binding("fill", "color").ofModel()),
       $(go.TextBlock, { text: "clk T=1500ms", stroke: "white"  }),
+    );
+
+  var vccTemplate =
+    $(go.Node, "Spot", nodeStyle(),
+      $(go.Shape, "Rectangle", ICshapeStyle(),
+        { fill: "orange" }),
+      $(go.Shape, "Rectangle", InoutPort(false),
+        { portId: "", alignment: new go.Spot(1, 0.5) }, new go.Binding("fill", "color").ofModel()),
+      $(go.TextBlock, { text: "Vcc", stroke: "white"  }),
+    );
+
+  var gndTemplate =
+    $(go.Node, "Spot", nodeStyle(),
+      $(go.Shape, "triangle", ICshapeStyle(),
+        { fill: "brown", angle: 180 }),
+      $(go.Shape, "Rectangle", InoutPort(false),
+        { portId: "", alignment: new go.Spot(0.75, 0.5) }, new go.Binding("fill", "color").ofModel()),
+      $(go.TextBlock, { text: "Gnd", stroke: "white"  }),
     );
 
   var andTemplate =
@@ -605,6 +623,8 @@ function initDiagram() {
   diagram.nodeTemplateMap.add("2wsb", twoWaySwitchBTemplate);
   diagram.nodeTemplateMap.add("sevensegment", sevenSegmentTemplate);
   diagram.nodeTemplateMap.add("dff", dffTemplate);
+  diagram.nodeTemplateMap.add("vcc", vccTemplate);
+  diagram.nodeTemplateMap.add("gnd", gndTemplate);
   
   // share the template map with the Palette
   palette.nodeTemplateMap = diagram.nodeTemplateMap;
@@ -614,6 +634,8 @@ function initDiagram() {
 
   // Add something to palette 
   palette.model.nodeDataArray = [
+    { category: "vcc" },
+    { category: "gnd" },
     { category: "input" },
     { category: "output" },
     { category: "clk" },
