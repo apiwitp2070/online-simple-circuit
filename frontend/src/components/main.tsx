@@ -142,8 +142,26 @@ function initDiagram() {
       $(go.Shape, "Rectangle", ICshapeStyle(),
         { fill: red }),
       $(go.Shape, "Rectangle", InoutPort(false),
-        { portId: "", alignment: new go.Spot(1.01, 0.5) }, new go.Binding("fill", "color").ofModel()),
+        { portId: "", alignment: new go.Spot(1, 0.5) }, new go.Binding("fill", "color").ofModel()),
       $(go.TextBlock, { text: "clk T=1500ms", stroke: "white"  }),
+    );
+
+  var vccTemplate =
+    $(go.Node, "Spot", nodeStyle(),
+      $(go.Shape, "Rectangle", ICshapeStyle(),
+        { fill: "orange" }),
+      $(go.Shape, "Rectangle", InoutPort(false),
+        { portId: "", alignment: new go.Spot(1, 0.5) }, new go.Binding("fill", "color").ofModel()),
+      $(go.TextBlock, { text: "Vcc", stroke: "white"  }),
+    );
+
+  var gndTemplate =
+    $(go.Node, "Spot", nodeStyle(),
+      $(go.Shape, "triangle", ICshapeStyle(),
+        { fill: "grey", angle: 180 }),
+      $(go.Shape, "Rectangle", InoutPort(false),
+        { portId: "", alignment: new go.Spot(0.75, 0.5) }, new go.Binding("fill", "color").ofModel()),
+      $(go.TextBlock, { text: "Gnd", stroke: "black"  }),
     );
 
   var andTemplate =
@@ -605,6 +623,8 @@ function initDiagram() {
   diagram.nodeTemplateMap.add("2wsb", twoWaySwitchBTemplate);
   diagram.nodeTemplateMap.add("sevensegment", sevenSegmentTemplate);
   diagram.nodeTemplateMap.add("dff", dffTemplate);
+  diagram.nodeTemplateMap.add("vcc", vccTemplate);
+  diagram.nodeTemplateMap.add("gnd", gndTemplate);
   
   // share the template map with the Palette
   palette.nodeTemplateMap = diagram.nodeTemplateMap;
@@ -614,6 +634,8 @@ function initDiagram() {
 
   // Add something to palette 
   palette.model.nodeDataArray = [
+    { category: "vcc" },
+    { category: "gnd" },
     { category: "input" },
     { category: "output" },
     { category: "clk" },
@@ -678,6 +700,8 @@ function initDiagram() {
         case "led_green" : doLEDgreen(node); break;
         case "led_yellow": doLEDyellow(node); break;
         case "led_red": doLEDred(node); break;
+        case "vcc": doVcc(node); break;
+        case "gnd": doGnd(node); break;
         case "input": break;  // doInput already called, above
       }
     });
@@ -698,6 +722,14 @@ function initDiagram() {
 
   function doInput(node:any) {
     setOutputLinks(node, node.findObject("NODESHAPE").fill);
+  }
+
+  function doVcc(node:any) {
+    setOutputLinks(node,yellow);
+  }
+
+  function doGnd(node:any) {
+    setOutputLinks(node,grey);
   }
 
   function doSwitch(node:any){
@@ -804,7 +836,12 @@ function initDiagram() {
   function getvalue(node:any,pid:any){
     var value
     node.findLinksInto(pid).each( function(link:any) {value=link.findObject("SHAPE").stroke})
-    return value
+    if(value){
+      return value
+    }
+    else{
+      return blue
+    }
   }
 
   function getoldvalue(node:any,pid:any){
@@ -888,8 +925,8 @@ function initDiagram() {
   function doAnd(node:any) {
     var input = getinput10(node)
 
-    if(input[0]===green && input[9]===green){ //vcc and gnd must active
-      if(input[1]===blue || input[2]===blue){
+    if(input[0]===yellow && input[9]===grey){ //vcc and gnd must active
+      if(input[1]===blue || input[2]===blue ){
         setvalue(node,"port11",blue)
       }
       else{
@@ -897,7 +934,7 @@ function initDiagram() {
         else setvalue(node,"port11",red)
       }
 
-      if(input[3]===blue || input[4]===blue){
+      if(input[3]===blue || input[4]===blue ){
         setvalue(node,"port8",blue)
       }
       else{
@@ -905,7 +942,7 @@ function initDiagram() {
         else setvalue(node,"port8",red)
       }
 
-      if(input[5]===blue || input[6]===blue){
+      if(input[5]===blue || input[6]===blue ){
         setvalue(node,"port3",blue)
       }
       else{
@@ -913,7 +950,7 @@ function initDiagram() {
         else setvalue(node,"port3",red)
       }
 
-      if(input[7]===blue || input[8]===blue){
+      if(input[7]===blue || input[8]===blue ){
         setvalue(node,"port6",blue)
       }
       else{
@@ -934,8 +971,8 @@ function initDiagram() {
   function doNand(node:any) {
     var input = getinput10(node)
 
-    if(input[0]===green && input[9]===green){ //vcc and gnd must active
-      if(input[1]===blue || input[2]===blue){
+    if(input[0]===yellow && input[9]===grey){ //vcc and gnd must active
+      if(input[1]===blue || input[2]===blue ){
         setvalue(node,"port11",blue)
       }
       else{
@@ -943,7 +980,7 @@ function initDiagram() {
         else setvalue(node,"port11",green)
       }
 
-      if(input[3]===blue || input[4]===blue){
+      if(input[3]===blue || input[4]===blue ){
         setvalue(node,"port8",blue)
       }
       else{
@@ -951,7 +988,7 @@ function initDiagram() {
         else setvalue(node,"port8",green)
       }
 
-      if(input[5]===blue || input[6]===blue){
+      if(input[5]===blue || input[6]===blue ){
         setvalue(node,"port3",blue)
       }
       else{
@@ -959,7 +996,7 @@ function initDiagram() {
         else setvalue(node,"port3",green)
       }
 
-      if(input[7]===blue || input[8]===blue){
+      if(input[7]===blue || input[8]===blue ){
         setvalue(node,"port6",blue)
       }
       else{
@@ -979,7 +1016,7 @@ function initDiagram() {
   function doNot(node:any) {
     var input = getinput8(node)
 
-    if(input[0]===green && input[7]===green){ //vcc and gnd must active
+    if(input[0]===yellow && input[7]===grey){ //vcc and gnd must active
 
       if(input[1]===green) {setvalue(node,"port12",red);}
       else{
@@ -1032,7 +1069,7 @@ function initDiagram() {
   function doOr(node:any) {
     var input = getinput10(node)
 
-    if(input[0]===green && input[9]===green){ //vcc and gnd must active
+    if(input[0]===yellow && input[9]===grey){ //vcc and gnd must active
 
       if(input[1]===blue || input[2]===blue) {setvalue(node,"port11",blue);}
       else{
@@ -1070,7 +1107,7 @@ function initDiagram() {
   function doNor(node:any) {
     var input = getinput10(node)
 
-    if(input[0]===green && input[9]===green){ //vcc and gnd must active
+    if(input[0]===yellow && input[9]===grey){ //vcc and gnd must active
 
       if(input[1]===blue || input[2]===blue) {setvalue(node,"port11",blue);}
       else if(input[1]===green || input[2]===green) {setvalue(node,"port11",red);}
@@ -1101,7 +1138,7 @@ function initDiagram() {
   function doXor(node:any) {
     var input = getinput10(node)
 
-    if(input[0]===green && input[9]===green){ //vcc and gnd must active
+    if(input[0]===yellow && input[9]===grey){ //vcc and gnd must active
 
       if(input[1]===blue || input[2]===blue) {setvalue(node,"port11",blue);}
       if(input[1]===green && input[2]===green) {setvalue(node,"port11",red);} 
@@ -1138,7 +1175,7 @@ function initDiagram() {
   function doXnor(node:any) {
     var input = getinput10(node)
 
-    if(input[0]===green && input[9]===green){ //vcc and gnd must active
+    if(input[0]===yellow && input[9]===grey){ //vcc and gnd must active
 
       if(input[1]===blue || input[2]===blue) {setvalue(node,"port11",blue);}
       if(input[1]===green && input[2]===green) {setvalue(node,"port11",green);} 
@@ -1192,7 +1229,7 @@ function initDiagram() {
   function do7seg(node:any){
     var input = getinput7seg(node)
     //console.log(input)
-    if(input[7]==green && input[8]==green){
+    if(input[7]===yellow && input[8]===grey){
 
       if (input[0]==green) {node.findObject("A").fill=red} else {node.findObject("A").fill=black} 
       if (input[1]==green) {node.findObject("B").fill=red} else {node.findObject("B").fill=black} 
@@ -1204,6 +1241,16 @@ function initDiagram() {
       if (input[9]==green) {node.findObject("DP").fill=red} else {node.findObject("DP").fill=black} 
     
     }
+    else{
+      node.findObject("A").fill=black
+      node.findObject("B").fill=black
+      node.findObject("C").fill=black
+      node.findObject("D").fill=black
+      node.findObject("E").fill=black
+      node.findObject("F").fill=black
+      node.findObject("G").fill=black
+      node.findObject("DP").fill=black
+    }
   }
 
   function doDff(node:any) {
@@ -1212,7 +1259,7 @@ function initDiagram() {
 
     //console.log(getoldvalue(node,"port9"))
 
-    if(input[0]===green && input[9]===green){ //vcc and gnd must active
+    if(input[0]===yellow && input[9]===grey){ //vcc and gnd must active
 
       if(input[1]===blue || input[4]===blue || input[3]===blue){
         setvalue(node,"port9",blue)
