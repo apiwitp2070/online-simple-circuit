@@ -18,6 +18,9 @@ function initDiagram() {
   var green = "forestgreen";  // 1 or true
   var black = "black"
   var white = "white"
+  var blue = "blue"
+  var yellow = "yellow"
+  var grey = "grey"
   var KAPPA = 4 * ((Math.sqrt(2) - 1) / 3);
 
 
@@ -700,24 +703,35 @@ function initDiagram() {
   function doSwitch(node:any){
     var stat= node.findObject("C").opacity
     var input= getvalue(node,"in")!
-    if(stat==1){
-      setvalue(node,"out",input)
+    if(input && input!=blue){
+      if(stat==1){
+        setvalue(node,"out",input)
+      }
+      else{
+        setvalue(node,"out",blue)
+      }
     }
     else{
-      setvalue(node,"out",red)
+      setvalue(node,"out",blue)
     }
   }
 
   function do2SwitchA(node:any){
     var stat= node.findObject("B").opacity
     var input = getvalue(node,"port3")!
-    if(stat==1){
-      setvalue(node,"port1",input)
-      setvalue(node,"port2",red)
+    if(input && (input!=blue)){
+      if(stat==1){
+        setvalue(node,"port1",input)
+        setvalue(node,"port2",blue)
+      }
+      else{
+        setvalue(node,"port1",blue)
+        setvalue(node,"port2",input)
+      }
     }
     else{
-      setvalue(node,"port1",red)
-      setvalue(node,"port2",input)
+      setvalue(node,"port1",blue)
+      setvalue(node,"port2",blue)
     }
   }
 
@@ -726,16 +740,31 @@ function initDiagram() {
     var in1 = getvalue(node,"port1")!
     var in2 = getvalue(node,"port2")!
     if(stat==1){
-      setvalue(node,"port3",in2)
+      if(in2){
+        setvalue(node,"port3",in2)
+      }
+      else{
+        setvalue(node,"port3",blue)
+      }
     }
     else{
-      setvalue(node,"port3",in1)
+      if(in1){
+        setvalue(node,"port3",in1)
+      }
+      else{
+        setvalue(node,"port3",blue)
+      }
     }
   }
 
   function doResistor(node:any){
     var input = getvalue(node,"in")!
-    setvalue(node,"out",input)
+    if(input){
+      setvalue(node,"out",input)
+    }
+    else{
+      setvalue(node,"out",blue)
+    }
   }
 
   function doLEDgreen(node:any){
@@ -793,7 +822,7 @@ function initDiagram() {
   }
 
   function getinput10(node:any){
-    var input = [red,red,red,red,red,red,red,red,red,red]
+    var input = [blue,blue,blue,blue,blue,blue,blue,blue,blue,blue]
     
     input[0] = getvalue(node,"port14")!
     input[1] = getvalue(node,"port13")!
@@ -810,7 +839,7 @@ function initDiagram() {
   }
 
   function getinput8(node:any){
-    var input = [red,red,red,red,red,red,red,red]
+    var input = [blue,blue,blue,blue,blue,blue,blue,blue]
     
     input[0] = getvalue(node,"port14")!
     input[1] = getvalue(node,"port13")!
@@ -826,7 +855,7 @@ function initDiagram() {
   }
 
   function getinputdff(node:any){
-    var input = [red,red,red,red,red,red,red,red,red,red]
+    var input = [blue,blue,blue,blue,blue,blue,blue,blue,blue,blue]
     
     input[0] = getvalue(node,"port14")!
     input[1] = getvalue(node,"port13")!
@@ -860,19 +889,44 @@ function initDiagram() {
     var input = getinput10(node)
 
     if(input[0]===green && input[9]===green){ //vcc and gnd must active
+      if(input[1]===blue || input[2]===blue){
+        setvalue(node,"port11",blue)
+      }
+      else{
+        if(input[1]===green && input[2]===green) {setvalue(node,"port11",green);}
+        else setvalue(node,"port11",red)
+      }
 
-      if(input[1]===green && input[2]===green) {setvalue(node,"port11",green);}
-      else setvalue(node,"port11",red)
+      if(input[3]===blue || input[4]===blue){
+        setvalue(node,"port8",blue)
+      }
+      else{
+        if(input[3]===green && input[4]===green) {setvalue(node,"port8",green);}
+        else setvalue(node,"port8",red)
+      }
 
-      if(input[3]===green && input[4]===green) {setvalue(node,"port8",green);}
-      else setvalue(node,"port8",red)
+      if(input[5]===blue || input[6]===blue){
+        setvalue(node,"port3",blue)
+      }
+      else{
+        if(input[5]===green && input[6]===green) {setvalue(node,"port3",green);}
+        else setvalue(node,"port3",red)
+      }
 
-      if(input[5]===green && input[6]===green) {setvalue(node,"port3",green);}
-      else setvalue(node,"port3",red)
+      if(input[7]===blue || input[8]===blue){
+        setvalue(node,"port6",blue)
+      }
+      else{
+        if(input[7]===green && input[8]===green) {setvalue(node,"port6",green);}
+        else setvalue(node,"port6",red)
+      }
 
-      if(input[7]===green && input[8]===green) {setvalue(node,"port6",green);}
-      else setvalue(node,"port6",red)
-
+    }
+    else{
+      setvalue(node,"port11",blue)
+      setvalue(node,"port8",blue)
+      setvalue(node,"port3",blue)
+      setvalue(node,"port6",blue)
     }
 
   }
@@ -881,19 +935,44 @@ function initDiagram() {
     var input = getinput10(node)
 
     if(input[0]===green && input[9]===green){ //vcc and gnd must active
+      if(input[1]===blue || input[2]===blue){
+        setvalue(node,"port11",blue)
+      }
+      else{
+        if(input[1]===green && input[2]===green) {setvalue(node,"port11",red);}
+        else setvalue(node,"port11",green)
+      }
 
-      if(input[1]===green && input[2]===green) {setvalue(node,"port11",red);}
-      else setvalue(node,"port11",green)
+      if(input[3]===blue || input[4]===blue){
+        setvalue(node,"port8",blue)
+      }
+      else{
+        if(input[3]===green && input[4]===green) {setvalue(node,"port8",red);}
+        else setvalue(node,"port8",green)
+      }
 
-      if(input[3]===green && input[4]===green) {setvalue(node,"port8",red);}
-      else setvalue(node,"port8",green)
+      if(input[5]===blue || input[6]===blue){
+        setvalue(node,"port3",blue)
+      }
+      else{
+        if(input[5]===green && input[6]===green) {setvalue(node,"port3",red);}
+        else setvalue(node,"port3",green)
+      }
 
-      if(input[5]===green && input[6]===green) {setvalue(node,"port3",red);}
-      else setvalue(node,"port3",green)
+      if(input[7]===blue || input[8]===blue){
+        setvalue(node,"port6",blue)
+      }
+      else{
+        if(input[7]===green && input[8]===green) {setvalue(node,"port6",red);}
+        else setvalue(node,"port6",green)
+      }
 
-      if(input[7]===green && input[8]===green) {setvalue(node,"port6",red);}
-      else setvalue(node,"port6",green)
-
+    }
+    else{
+      setvalue(node,"port11",blue)
+      setvalue(node,"port8",blue)
+      setvalue(node,"port3",blue)
+      setvalue(node,"port6",blue)
     }
 
   }
@@ -903,23 +982,49 @@ function initDiagram() {
     if(input[0]===green && input[7]===green){ //vcc and gnd must active
 
       if(input[1]===green) {setvalue(node,"port12",red);}
-      else setvalue(node,"port12",green)
+      else{
+        if(input[1]===blue){setvalue(node,"port12",blue)}
+        else setvalue(node,"port12",green)
+      }
 
       if(input[2]===green) {setvalue(node,"port10",red);}
-      else setvalue(node,"port10",green)
+      else{
+        if(input[2]===blue){setvalue(node,"port10",blue)}
+        else setvalue(node,"port10",green)
+      }
 
       if(input[3]===green) {setvalue(node,"port8",red);}
-      else setvalue(node,"port8",green)
+      else{
+        if(input[3]===blue){setvalue(node,"port8",blue)}
+        else setvalue(node,"port8",green)
+      }
 
       if(input[4]===green) {setvalue(node,"port2",red);}
-      else setvalue(node,"port2",green)
+      else{
+        if(input[4]===blue){setvalue(node,"port2",blue)}
+        else setvalue(node,"port2",green)
+      }
 
       if(input[5]===green) {setvalue(node,"port4",red);}
-      else setvalue(node,"port4",green)
+      else{
+        if(input[5]===blue){setvalue(node,"port4",blue)}
+        else setvalue(node,"port4",green)
+      }
 
       if(input[6]===green) {setvalue(node,"port6",red);}
-      else setvalue(node,"port6",green)
+      else{
+        if(input[6]===blue){setvalue(node,"port6",blue)}
+        else setvalue(node,"port6",green)
+      }
 
+    }
+    else{
+      setvalue(node,"port12",blue)
+      setvalue(node,"port10",blue)
+      setvalue(node,"port8",blue)
+      setvalue(node,"port2",blue)
+      setvalue(node,"port4",blue)
+      setvalue(node,"port6",blue)
     }
 
   }
@@ -929,18 +1034,36 @@ function initDiagram() {
 
     if(input[0]===green && input[9]===green){ //vcc and gnd must active
 
-      if(input[1]===green || input[2]===green) {setvalue(node,"port11",green);}
-      else setvalue(node,"port11",red)
+      if(input[1]===blue || input[2]===blue) {setvalue(node,"port11",blue);}
+      else{
+        if(input[1]===green || input[2]===green) {setvalue(node,"port11",green);}
+        else setvalue(node,"port11",red)
+      }
 
-      if(input[3]===green || input[4]===green) {setvalue(node,"port8",green);}
-      else setvalue(node,"port8",red)
+      if(input[1]===blue || input[2]===blue) {setvalue(node,"port8",blue);}
+      else{
+        if(input[3]===green || input[4]===green) {setvalue(node,"port8",green);}
+        else setvalue(node,"port8",red)
+      }
 
-      if(input[5]===green || input[6]===green) {setvalue(node,"port3",green);}
-      else setvalue(node,"port3",red)
+      if(input[5]===blue || input[6]===blue) {setvalue(node,"port3",blue);}
+      else{
+        if(input[5]===green || input[6]===green) {setvalue(node,"port3",green);}
+        else setvalue(node,"port3",red)
+      }
 
-      if(input[7]===green || input[8]===green) {setvalue(node,"port6",green);}
-      else setvalue(node,"port6",red)
+      if(input[7]===blue || input[8]===blue) {setvalue(node,"port6",blue);}
+      else{
+        if(input[7]===green || input[8]===green) {setvalue(node,"port6",green);}
+        else setvalue(node,"port6",red)
+      }
 
+    }
+    else{
+      setvalue(node,"port11",blue)
+      setvalue(node,"port8",blue)
+      setvalue(node,"port3",blue)
+      setvalue(node,"port6",blue)
     }
 
   }
@@ -949,18 +1072,28 @@ function initDiagram() {
 
     if(input[0]===green && input[9]===green){ //vcc and gnd must active
 
-      if(input[1]===green || input[2]===green) {setvalue(node,"port11",red);}
+      if(input[1]===blue || input[2]===blue) {setvalue(node,"port11",blue);}
+      else if(input[1]===green || input[2]===green) {setvalue(node,"port11",red);}
       else setvalue(node,"port11",green)
 
-      if(input[3]===green || input[4]===green) {setvalue(node,"port8",red);}
+      if(input[3]===blue || input[4]===blue) {setvalue(node,"port8",blue);}
+      else if(input[3]===green || input[4]===green) {setvalue(node,"port8",red);}
       else setvalue(node,"port8",green)
 
-      if(input[5]===green || input[6]===green) {setvalue(node,"port3",red);}
+      if(input[5]===blue || input[6]===blue) {setvalue(node,"port3",blue);}
+      else if(input[5]===green || input[6]===green) {setvalue(node,"port3",red);}
       else setvalue(node,"port3",green)
 
-      if(input[7]===green || input[8]===green) {setvalue(node,"port6",red);}
+      if(input[7]===blue || input[8]===blue) {setvalue(node,"port6",blue);}
+      else if(input[7]===green || input[8]===green) {setvalue(node,"port6",red);}
       else setvalue(node,"port6",green)
 
+    }
+    else{
+      setvalue(node,"port11",blue)
+      setvalue(node,"port8",blue)
+      setvalue(node,"port3",blue)
+      setvalue(node,"port6",blue)
     }
 
   }
@@ -970,51 +1103,72 @@ function initDiagram() {
 
     if(input[0]===green && input[9]===green){ //vcc and gnd must active
 
+      if(input[1]===blue || input[2]===blue) {setvalue(node,"port11",blue);}
       if(input[1]===green && input[2]===green) {setvalue(node,"port11",red);} 
       if(input[1]===green && input[2]===red) {setvalue(node,"port11",green);}
       if(input[1]===red && input[2]===green) {setvalue(node,"port11",green);}
       if(input[1]===red && input[2]===red) {setvalue(node,"port11",red);}
 
+      if(input[3]===blue || input[4]===blue) {setvalue(node,"port8",blue);}
       if(input[3]===green && input[4]===green) {setvalue(node,"port8",red);} 
       if(input[3]===green && input[4]===red) {setvalue(node,"port8",green);}
       if(input[3]===red && input[4]===green) {setvalue(node,"port8",green);}
       if(input[3]===red && input[4]===red) {setvalue(node,"port8",red);}
 
+      if(input[5]===blue || input[6]===blue) {setvalue(node,"port3",blue);}
       if(input[5]===green && input[6]===green) {setvalue(node,"port3",red);} 
       if(input[5]===green && input[6]===red) {setvalue(node,"port3",green);}
       if(input[5]===red && input[6]===green) {setvalue(node,"port3",green);}
       if(input[5]===red && input[6]===red) {setvalue(node,"port3",red);}
 
+      if(input[7]===blue || input[8]===blue) {setvalue(node,"port6",blue);}
       if(input[7]===green && input[8]===green) {setvalue(node,"port6",red);} 
       if(input[7]===green && input[8]===red) {setvalue(node,"port6",green);}
       if(input[7]===red && input[8]===green) {setvalue(node,"port6",green);}
       if(input[7]===red && input[8]===red) {setvalue(node,"port6",red);}
     }
+    else{
+      setvalue(node,"port11",blue);
+      setvalue(node,"port8",blue);
+      setvalue(node,"port3",blue);
+      setvalue(node,"port6",blue);
+    }
   }
+
   function doXnor(node:any) {
     var input = getinput10(node)
 
     if(input[0]===green && input[9]===green){ //vcc and gnd must active
 
+      if(input[1]===blue || input[2]===blue) {setvalue(node,"port11",blue);}
       if(input[1]===green && input[2]===green) {setvalue(node,"port11",green);} 
       if(input[1]===green && input[2]===red) {setvalue(node,"port11",red);}
       if(input[1]===red && input[2]===green) {setvalue(node,"port11",red);}
       if(input[1]===red && input[2]===red) {setvalue(node,"port11",green);}
 
+      if(input[3]===blue || input[4]===blue) {setvalue(node,"port8",blue);}
       if(input[3]===green && input[4]===green) {setvalue(node,"port8",green);} 
       if(input[3]===green && input[4]===red) {setvalue(node,"port8",red);}
       if(input[3]===red && input[4]===green) {setvalue(node,"port8",red);}
       if(input[3]===red && input[4]===red) {setvalue(node,"port8",green);}
 
+      if(input[5]===blue || input[6]===blue) {setvalue(node,"port3",blue);}
       if(input[5]===green && input[6]===green) {setvalue(node,"port3",green);} 
       if(input[5]===green && input[6]===red) {setvalue(node,"port3",red);}
       if(input[5]===red && input[6]===green) {setvalue(node,"port3",red);}
       if(input[5]===red && input[6]===red) {setvalue(node,"port3",green);}
 
+      if(input[7]===blue || input[8]===blue) {setvalue(node,"port6",blue);}
       if(input[7]===green && input[8]===green) {setvalue(node,"port6",green);} 
       if(input[7]===green && input[8]===red) {setvalue(node,"port6",red);}
       if(input[7]===red && input[8]===green) {setvalue(node,"port6",red);}
       if(input[7]===red && input[8]===red) {setvalue(node,"port6",green);}
+    }
+    else{
+      setvalue(node,"port11",blue);
+      setvalue(node,"port8",blue);
+      setvalue(node,"port3",blue);
+      setvalue(node,"port6",blue);
     }
   }
 
@@ -1060,7 +1214,11 @@ function initDiagram() {
 
     if(input[0]===green && input[9]===green){ //vcc and gnd must active
 
-      if(input[1]===green){ //check clr
+      if(input[1]===blue || input[4]===blue || input[3]===blue){
+        setvalue(node,"port9",blue)
+        setvalue(node,"port8",blue)
+      }
+      else if(input[1]===green){ //check clr
         setvalue(node,"port9",red)
         setvalue(node,"port8",green)
       }
@@ -1083,15 +1241,17 @@ function initDiagram() {
 
       //----------------------------------------------
 
-
-
-      if(input[5]===green){ //check clr
-        setvalue(node,"port9",red)
-        setvalue(node,"port8",green)
+      if(input[5]===blue || input[8]===blue || input[7]===blue){
+        setvalue(node,"port5",blue)
+        setvalue(node,"port6",blue)
+      }
+      else if(input[5]===green){ //check clr
+        setvalue(node,"port5",red)
+        setvalue(node,"port6",green)
       }
       else if(input[8]===green){ //check pre
-        setvalue(node,"port9",green)
-        setvalue(node,"port8",red)
+        setvalue(node,"port5",green)
+        setvalue(node,"port6",red)
       }
       else if(input[7]===green){ //check clk change
 
@@ -1102,8 +1262,15 @@ function initDiagram() {
         else setvalue(node,"port6",green)
 
       }
+
       
       
+    }
+    else{
+      setvalue(node,"port9",blue)
+      setvalue(node,"port8",blue)
+      setvalue(node,"port5",blue)
+      setvalue(node,"port6",blue)
     }
 
   }
