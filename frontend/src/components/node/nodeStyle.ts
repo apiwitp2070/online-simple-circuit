@@ -148,3 +148,12 @@ export function twoWayLineB() {
     desiredSize: new go.Size(1,30),
   }
 }
+
+export function twoWayLineC() {
+  return {
+    name: "C",
+    stroke: "white",
+    fill: "white",
+    desiredSize: new go.Size(1,30),
+  }
+}
