@@ -1229,7 +1229,7 @@ function initDiagram() {
   function do7seg(node:any){
     var input = getinput7seg(node)
     //console.log(input)
-    if(input[7]===yellow && input[8]===grey){
+    if(input[7]===yellow && input[8]===yellow){
 
       if (input[0]==green) {node.findObject("A").fill=red} else {node.findObject("A").fill=black} 
       if (input[1]==green) {node.findObject("B").fill=red} else {node.findObject("B").fill=black} 
