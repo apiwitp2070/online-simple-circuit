@@ -1259,7 +1259,7 @@ function initDiagram() {
 
     //console.log(getoldvalue(node,"port9"))
 
-    if(input[0]===yellow && input[9]===grey){ //vcc and gnd must active
+    if(input[0]===yellow && input[9]===yellow){ //vcc and gnd must active
 
       if(input[1]===blue || input[4]===blue || input[3]===blue){
         setvalue(node,"port9",blue)
