@@ -10,6 +10,8 @@ import { FromBottom, FromTop, InoutPort, SwitchLeft, SwitchRight } from './node/
 
 var count=0;
 var jsonData = {};
+var sys = 0
+var FileSaver = require('file-saver');
 
 function initDiagram() {
 
@@ -668,6 +670,10 @@ function initDiagram() {
     if(count%60===0){
       count=0;
     }
+
+    if (sys == 1) newFile();
+    else if (sys == 2) load(jsonData);
+    else if (sys == 3) save();
   }
   
   function updateStates() {
@@ -1310,8 +1316,6 @@ function initDiagram() {
 
       }
 
-      
-      
     }
     else{
       setvalue(node,"port9",blue)
@@ -1328,19 +1332,29 @@ function initDiagram() {
     node.linksConnected.each(function(link:any) { node.findObject("NODESHAPE").fill = link.findObject("SHAPE").stroke; });
   }
 
+  function newFile() {
+    console.log('new file')
+    sys = 0;
+  }
+
   function save() {
     var data = diagram.model.toJson();
-    console.log(data);
+    jsonData = data;
+    console.log('save', jsonData);
     diagram.isModified = false;
+    var blob = new Blob([jsonData as BlobPart], {type : 'application/json'});
+    FileSaver.saveAs(blob, "diagram.txt");
+    sys = 0;
   }
 
   function load(Data: any) {
     diagram.model = go.Model.fromJson(Data);
+    console.log('load', Data);
+    sys = 0;
   }
 
   return diagram;
 }
-
 
 // render function...
 function Main() {
@@ -1357,13 +1371,32 @@ function Main() {
     return ev.returnValue = 'Are you sure you want to close?';
   });*/
 
+  function setSystemValue(val: any) {
+    if (val == 1) sys = 1;
+    else if (val == 2) sys = 2;
+    else if (val == 3) sys = 3;
+    else sys = 0;
+  }
+
+  function loadFile(e: any) {
+    e.preventDefault()
+    var reader = new FileReader()
+    reader.onload = async (e) => { 
+      const text = (e.target?.result);
+      if (text) jsonData = text;
+    };
+    reader.readAsText(e.target.files[0]);
+    setSystemValue(2);
+  }
+
   return (
     <div>
       <div className="absolute flex items-center w-full h-16 bg-black">
           <button className="mx-4 text-white text-4xl">OSC</button>
-          <button className="mx-8 text-white text-xl">New</button>
-          <button className="mx-8 text-white text-xl">Load</button>
-          <button className="mx-8 text-white text-xl">Save</button>
+          <button onClick={(e) => setSystemValue(1)} className="mx-8 text-white text-xl">New</button>
+          <button onClick={(e) => setSystemValue(2)} className="mx-8 text-white text-xl">Load</button>
+          <input type="file" onChange={(e) => loadFile(e)} className='text-white'/>
+          <button onClick={(e) => setSystemValue(3)} className="mx-8 text-white text-xl">Save</button>
       </div>
 
       <div className="flex">
