@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useEffect } from 'react';
 
 import * as go from 'gojs';
@@ -10,8 +10,20 @@ import { FromBottom, FromTop, InoutPort, SwitchLeft, SwitchRight } from './node/
 
 var count=0;
 var jsonData = {};
-var sys = 0
 var FileSaver = require('file-saver');
+
+/*
+  universal system variable; will check value of this variable in every main loop
+    sys = 0 : do nothing
+    sys = 1 : call function new file
+    sys = 2 : call function load file
+    sys = 3 : call function save file
+*/
+var sys = 0
+
+//Button styling
+const Button =
+  'px-8 py-5 bg-black text-white text-xl block transition ease-out duration-300 focus:outline-none hover:bg-white hover:text-black';
 
 function initDiagram() {
 
@@ -671,6 +683,7 @@ function initDiagram() {
       count=0;
     }
 
+    // check universal system variable
     if (sys == 1) newFile();
     else if (sys == 2) load(jsonData);
     else if (sys == 3) save();
@@ -1332,22 +1345,27 @@ function initDiagram() {
     node.linksConnected.each(function(link:any) { node.findObject("NODESHAPE").fill = link.findObject("SHAPE").stroke; });
   }
 
-  function newFile() {
-    console.log('new file')
+  async function newFile() {
+    let isConfirm = window.confirm("All unsaved changes will be lost\nProceed to create a new file?");
+    if (isConfirm) {
+      const newData = {};
+      diagram.model = go.Model.fromJson(newData);
+      console.log('new file');
+    }
     sys = 0;
   }
 
-  function save() {
+  async function save() {
     var data = diagram.model.toJson();
     jsonData = data;
     console.log('save', jsonData);
     diagram.isModified = false;
     var blob = new Blob([jsonData as BlobPart], {type : 'application/json'});
-    FileSaver.saveAs(blob, "diagram.txt");
+    FileSaver.saveAs(blob, "diagram.json");
     sys = 0;
   }
 
-  function load(Data: any) {
+  async function load(Data: any) {
     diagram.model = go.Model.fromJson(Data);
     console.log('load', Data);
     sys = 0;
@@ -1363,13 +1381,14 @@ function Main() {
     document.title = "Online Simple Circuit"
   }, []);
 
-  // for alert when exit page without saving change.
-  // (disabled for now because it's so annoy while testing)
-  /*window.addEventListener("beforeunload", (ev) => 
+  // for alert when exit page without saving change. Uncomment to enable.
+  /*
+  window.addEventListener("beforeunload", (ev) => 
   {  
     ev.preventDefault();
     return ev.returnValue = 'Are you sure you want to close?';
-  });*/
+  });
+  */
 
   function setSystemValue(val: any) {
     if (val == 1) sys = 1;
@@ -1389,14 +1408,28 @@ function Main() {
     setSystemValue(2);
   }
 
+  function handleJsonText(e: any) {
+    jsonData = e;
+  }
+
   return (
     <div>
       <div className="absolute flex items-center w-full h-16 bg-black">
-          <button className="mx-4 text-white text-4xl">OSC</button>
-          <button onClick={(e) => setSystemValue(1)} className="mx-8 text-white text-xl">New</button>
-          <button onClick={(e) => setSystemValue(2)} className="mx-8 text-white text-xl">Load</button>
-          <input type="file" onChange={(e) => loadFile(e)} className='text-white'/>
-          <button onClick={(e) => setSystemValue(3)} className="mx-8 text-white text-xl">Save</button>
+        <div className="noselect mx-4 text-white text-4xl">OSC</div>
+        <button onClick={(e) => setSystemValue(1)} className={Button}>New</button>
+        <button className={Button}>
+          <label htmlFor="load-file">Load</label>
+          <input type="file" name="load-file" id="load-file" onChange={(e) => loadFile(e)} className="pl-4"/>
+        </button>
+        <button onClick={(e) => setSystemValue(3)} className={Button}>Save</button>
+        <div className="px-8 py-5 flex">
+          <textarea 
+            placeholder="JSON text data here" 
+            className="m-2 focus:outline-none" 
+            onChange={(e) => handleJsonText(e.target.value)}>
+          </textarea>
+          <button onClick={(e) => setSystemValue(2)} className={Button}>Load JSON</button>
+        </div>
       </div>
 
       <div className="flex">
@@ -1419,7 +1452,7 @@ function Main() {
         <div style={{height: "90vh"}} className="tabs mt-16 w-1/5 flex flex-col bg-white border-l border-b border-black">
           <div className="tab">
             <input type="radio" id="rd1" name="rd" checked={true}></input>
-            <label className="tab-label" htmlFor="rd1">IC Gates</label>
+            <label className="noselect tab-label" htmlFor="rd1">IC Gates</label>
             <div className="tab-content">
               <div id="palette" style={{height: '340px'}}></div>
             </div>
@@ -1427,7 +1460,7 @@ function Main() {
 
           <div className="tab">
             <input type="radio" id="rd2" name="rd"></input>
-            <label className="tab-label" htmlFor="rd2">Others items</label>
+            <label className="noselect tab-label" htmlFor="rd2">Others items</label>
             <div className="tab-content">
               <div id="palette2" style={{height: '340px'}}></div>
             </div>
