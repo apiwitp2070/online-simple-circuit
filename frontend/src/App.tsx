@@ -4,7 +4,7 @@ import Main from './components/main';
 
 const App = () => {
   return(
-    <BrowserRouter>
+    <BrowserRouter basename='/components'>
       <Switch>
         <Route exact path="/main" component={Main} />
         <Redirect to="/main" />
