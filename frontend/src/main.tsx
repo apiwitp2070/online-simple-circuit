@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import * as go from 'gojs';
 import { ReactDiagram } from 'gojs-react';
 
-import '../App.css';  // contains .diagram-component CSS
+import './App.css';  // contains .diagram-component CSS
 import { ICshapeStyle, nodeEllipse, ledRedStyle, ledYellowStyle, ledGreenStyle, resistorStyle, sevenSegmentStyle, numberPart, numberPartG, numberPartF, numberPartA, numberPartB, numberPartC,numberPartD,numberPartE, twoWayLineA, twoWayLineB, twoWayLineC } from './components/node/nodeStyle';
 import { FromBottom, FromTop, InoutPort, SwitchLeft, SwitchRight } from './components/node/portTemplate';
 
