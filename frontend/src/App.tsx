@@ -6,8 +6,8 @@ const App = () => {
   return(
     <BrowserRouter basename='/'>
       <Switch>
-        <Route exact path="/" component={Main} />
-        <Redirect to="/" />
+        <Route exact path="/online-simple-circuit" component={Main} />
+        <Redirect to="/online-simple-circuit" />
       </Switch>
     </BrowserRouter>
   );
