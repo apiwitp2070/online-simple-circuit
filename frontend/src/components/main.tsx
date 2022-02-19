@@ -31,7 +31,6 @@ function initDiagram() {
   var red = "orangered";  // 0 or false
   var green = "forestgreen";  // 1 or true
   var black = "black"
-  var white = "white"
   var blue = "blue"
   var yellow = "yellow"
   var grey = "grey"
