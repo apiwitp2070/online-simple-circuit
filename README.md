@@ -1,15 +1,10 @@
 # online-simple-circuit
-Final Project for CPE32 / 2021-2022
+Final Project for CPE32 / 2021-2022  
 
-**Branch available:**  
+Online circuit diagram maker with React and GoJS  
 
-main  
-dev
+**Github:**  
+https://laevatein2070.github.io/online-simple-circuit
 
-**Structure:**  
-osc/  
-|_backend/  
-|_frontend/  
-
-**Install:**  
-git clone then npm install
+**Vercel:**  
+https://online-simple-circuit.vercel.app/
