@@ -1,12 +1,13 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 
 import * as go from 'gojs';
 import { ReactDiagram } from 'gojs-react';
 
-import '../App.css';  // contains .diagram-component CSS
-import { ICshapeStyle, nodeEllipse, ledRedStyle, ledYellowStyle, ledGreenStyle, resistorStyle, sevenSegmentStyle, numberPart, numberPartG, numberPartF, numberPartA, numberPartB, numberPartC,numberPartD,numberPartE, twoWayLineA, twoWayLineB, twoWayLineC } from './node/nodeStyle';
-import { FromBottom, FromTop, InoutPort, SwitchLeft, SwitchRight } from './node/portTemplate';
+import './App.css';  // contains .diagram-component CSS
+import { ICshapeStyle, nodeEllipse, ledRedStyle, ledYellowStyle, ledGreenStyle, resistorStyle, sevenSegmentStyle, numberPart, numberPartG, numberPartF, numberPartA, numberPartB, numberPartC,numberPartD,numberPartE, twoWayLineA, twoWayLineB, twoWayLineC } from './components/node/nodeStyle';
+import { FromBottom, FromTop, InoutPort, SwitchLeft, SwitchRight } from './components/node/portTemplate';
 
 var count=0;
 var jsonData = {};
@@ -23,7 +24,7 @@ var sys = 0
 
 //Button styling
 const Button =
-  'px-8 py-5 bg-black text-white text-xl block transition ease-out duration-300 focus:outline-none hover:bg-white hover:text-black';
+  'px-8 py-4 bg-black text-white text-xl block transition ease-out duration-300 focus:outline-none hover:bg-white hover:text-black';
 
 function initDiagram() {
 
@@ -31,7 +32,6 @@ function initDiagram() {
   var red = "orangered";  // 0 or false
   var green = "forestgreen";  // 1 or true
   var black = "black"
-  var white = "white"
   var blue = "blue"
   var yellow = "yellow"
   var grey = "grey"
@@ -43,10 +43,12 @@ function initDiagram() {
   const diagram =
     $(go.Diagram,
       {
-        "toolManager.mouseWheelBehavior": go.ToolManager.WheelZoom,
-        "draggingTool.isGridSnapEnabled": true,
-        'undoManager.isEnabled': true,
-        'initialScale': 1.5,
+        //Global settings for the whole diagram
+        "toolManager.mouseWheelBehavior": go.ToolManager.WheelZoom, // Mouse wheel to zoom
+        "draggingTool.isGridSnapEnabled": true,                     // Enable grid snap
+        'undoManager.isEnabled': true,                              // Enable Ctrl+Z to undo
+        'initialScale': 1.5,                                        // Diagram zoom scale when start
+        // Add other settings here...
       });
   
   // when the document is modified, add a "*" to the title
@@ -157,7 +159,7 @@ function initDiagram() {
         { fill: red }),
       $(go.Shape, "Rectangle", InoutPort(false),
         { portId: "", alignment: new go.Spot(1, 0.5) }, new go.Binding("fill", "color").ofModel()),
-      $(go.TextBlock, { text: "clk T=1500ms", stroke: "white"  }),
+      $(go.TextBlock, { text: "clk T=1500ms", stroke: "white" }),
     );
 
   var vccTemplate =
@@ -1377,9 +1379,15 @@ function initDiagram() {
 // render function...
 function Main() {
 
+  let history = useHistory();
+
   useEffect(() => {
     document.title = "Online Simple Circuit"
   }, []);
+
+  function onClickHome() {
+    history.push('./online-simple-circuit');
+  }
 
   // for alert when exit page without saving change. Uncomment to enable.
   /*
@@ -1414,15 +1422,17 @@ function Main() {
 
   return (
     <div>
-      <div className="absolute flex items-center w-full h-16 bg-black">
-        <div className="noselect mx-4 text-white text-4xl">OSC</div>
+      <div className="z-50 noselect absolute flex items-center w-full h-16 bg-black">
+        <div className="mx-4 text-white text-4xl cursor-pointer" onClick={onClickHome}>
+          OSC
+        </div>
         <button onClick={(e) => setSystemValue(1)} className={Button}>New</button>
-        <button className={Button}>
-          <label htmlFor="load-file">Load</label>
-          <input type="file" name="load-file" id="load-file" onChange={(e) => loadFile(e)} className="pl-4"/>
+        <button >
+          <label className={Button} htmlFor="load-file">Load</label>
+          <input type="file" name="load-file" id="load-file" onChange={(e) => loadFile(e)}/>
         </button>
         <button onClick={(e) => setSystemValue(3)} className={Button}>Save</button>
-        <div className="px-8 py-5 flex">
+        <div className="mx-8 flex">
           <textarea 
             placeholder="JSON text data here" 
             className="m-2 focus:outline-none" 
@@ -1430,31 +1440,37 @@ function Main() {
           </textarea>
           <button onClick={(e) => setSystemValue(2)} className={Button}>Load JSON</button>
         </div>
+        <a href='./documents' target='_blank' rel='noopener noreferrer'>
+          <button className={Button}>Docs</button>
+        </a>
       </div>
 
       <div className="flex">
-        <div id="diagramDiv" className="mt-16 w-4/5 bg-gray-200 relative border-b border-black">
+        <div id="diagramDiv" className="w-4/5 h-screen bg-gray-200 relative border-b border-black">
           <ReactDiagram
             initDiagram={initDiagram}
             divClassName='main-diagram'
             nodeDataArray={[]}
           />
-          <div className="ml-4">
-            <p>Drag and drop component from the right side</p>
+          <div className="m-4 flex flex-row justify-between">
             <div className="flex">
-              <h1 className="pr-5">Ctrl+Z to Undo</h1>
-              <h1 className="pr-5">Ctrl+Y to Redo</h1>
-              <h1>Mouse wheel to zoom in/out</h1>
+              <div className="flex mr-2">
+                <h1 className='text-sm mr-2 px-2 border border-black bg-white rounded-md'>Ctrl + Z</h1> to Undo</div>
+              <div className="flex mr-2">
+                <h1 className='text-sm mx-2 px-2 border border-black bg-white rounded-md'>Ctrl + Y</h1> to Redo</div>
+              <div className='flex mr-2'>
+                <h1 className='text-sm mx-2 px-2 border border-black bg-white rounded-md'>Mouse Wheel</h1> to zoom in/out</div>
             </div>
+            <h1>Drag and drop component from the right side</h1>
           </div>
         </div>
 
-        <div style={{height: "90vh"}} className="tabs mt-16 w-1/5 flex flex-col bg-white border-l border-b border-black">
+        <div className="tabs mt-16 w-1/5 flex flex-col bg-white border-l border-b border-black">
           <div className="tab">
             <input type="radio" id="rd1" name="rd" checked={true}></input>
             <label className="noselect tab-label" htmlFor="rd1">IC Gates</label>
             <div className="tab-content">
-              <div id="palette" style={{height: '340px'}}></div>
+              <div id="palette" style={{height: '420px'}}></div>
             </div>
           </div>
 
@@ -1462,7 +1478,7 @@ function Main() {
             <input type="radio" id="rd2" name="rd"></input>
             <label className="noselect tab-label" htmlFor="rd2">Others items</label>
             <div className="tab-content">
-              <div id="palette2" style={{height: '340px'}}></div>
+              <div id="palette2" style={{height: '420px'}}></div>
             </div>
           </div>
 
