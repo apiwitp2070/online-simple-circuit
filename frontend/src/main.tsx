@@ -1098,7 +1098,7 @@ function initDiagram() {
         else setvalue(node,"port11",red)
       }
 
-      if(input[1]===blue || input[2]===blue) {setvalue(node,"port8",blue);}
+      if(input[3]===blue || input[4]===blue) {setvalue(node,"port8",blue);}
       else{
         if(input[3]===green || input[4]===green) {setvalue(node,"port8",green);}
         else setvalue(node,"port8",red)
