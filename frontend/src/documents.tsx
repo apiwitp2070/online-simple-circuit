@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import { useHistory } from "react-router-dom";
+import { andexam, andgate, inout, intf, led, sevenseg, sw, vccgnd } from "./components/images";
 
 function Docs() {
   const intro = useRef<any>(null);
@@ -53,6 +54,7 @@ function Docs() {
           </p>
 
           <h1 className="text-2xl">Interface</h1>
+          <img src={intf} className="my-4" />
           <p className={par}>
             You can create a new file, load existiong file, saving file or even load the diagram with a
             specify JSON format. Your change will not be saved if you close the website without saving it.
@@ -93,11 +95,13 @@ function Docs() {
           </p>
 
           <h1 className="text-xl">Vcc and Gnd</h1>
+          <img src={vccgnd} className="my-4 h-16" />
           <p className={par}>
             Vcc and Gnd are mainly use for power supply and to make certain components funcion correctly.
           </p>
 
           <h1 className="text-xl">Input and Output</h1>
+          <img src={inout} className="my-4 h-16" />
           <p className={par}>
             Input (The one with circle shape) are use to give a static value of 0 or 1 for any component.
             A value can be determine by a color of it: red for 0 and green for 1. User can change its value any time by double-clicking it.
@@ -116,13 +120,18 @@ function Docs() {
             But to make it functional correctly, Both power supply from Vcc components and a ground connection 
             from Gnd components need to be connected at the same time.
           </p>
+          <img src={andgate} width={480} className="my-4" />
+          <img src={andexam} width={480} className="my-4" />
+          <p className={par}>(An example of AND gate IC and how to implement in OSC)</p>
 
           <h1 className="text-xl">LED</h1>
+          <img src={led} className="my-4 h-32" />
           <p className={par}>
             A component mainly for visualizing effect. A three color of red, green and blue are available to use.
           </p>
 
           <h1 className="text-xl">Switch</h1>
+          <img src={sw} className="my-4 h-48" />
           <p className={par}>
             Act as a "middle-man" to determine if a wire "bridge" should be formed between both side ot the switch.
             Connect two component with a switch will make it an open circuit by default. (A switch will not formed
@@ -141,6 +150,7 @@ function Docs() {
           </p>
 
           <h1 className="text-xl">7 Segments</h1>
+          <img src={sevenseg} className="my-4 h-64" />
           <p className={par}>
             A 1 digit number display with a red-light LED displaying at a specific part when a specific port
             is connected. There are a total of 8 part for display (include a dot) that can be formed into a number.
