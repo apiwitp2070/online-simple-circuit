@@ -9,6 +9,8 @@ function Docs() {
   const comp = useRef<any>(null);
   let history = useHistory();
 
+  const headerTopic = "px-4 py-2 cursor-pointer transition duration-300 hover:bg-gray-200"
+
   useEffect(() => {
     document.title = "OSC Documentation"
   }, []);
@@ -34,11 +36,11 @@ function Docs() {
       <div ref={intro} className="relative flex mx-auto" style={{maxWidth: 1215}}>
 
         <div className="fixed w-1/5 mt-24">
-          <h1 className="text-2xl">Documentation</h1>
-          <h1 className="cursor-pointer my-4" onClick={() => scrollToRef(intro)}>Introduction</h1>
-          <h1 className="cursor-pointer my-4" onClick={() => scrollToRef(inter)}>Interface</h1>
-          <h1 className="cursor-pointer my-4" onClick={() => scrollToRef(ctrl)}>Basic Control</h1>
-          <h1 className="cursor-pointer my-4" onClick={() => scrollToRef(comp)}>Components</h1>
+          <h1 className="text-2xl mb-4">Documentation</h1>
+          <h1 className={headerTopic} onClick={() => scrollToRef(intro)}>Introduction</h1>
+          <h1 className={headerTopic} onClick={() => scrollToRef(inter)}>Interface</h1>
+          <h1 className={headerTopic} onClick={() => scrollToRef(ctrl)}>Basic Control</h1>
+          <h1 className={headerTopic} onClick={() => scrollToRef(comp)}>Components</h1>
         </div>
           
         <div className="absolute right-0 w-4/5 pl-16 mt-24">

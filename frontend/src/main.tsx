@@ -103,6 +103,7 @@ function initDiagram() {
     $(go.GraphLinksModel,
       { linkFromPortIdProperty: "fromPort",  // required information:
         linkToPortIdProperty: "toPort",      // identifies data property names
+        linkKeyProperty: 'key',
     });
     
   // node template helpers (Tooltip when hover with mouse)
@@ -1432,15 +1433,7 @@ function Main() {
           <input type="file" name="load-file" id="load-file" onChange={(e) => loadFile(e)}/>
         </button>
         <button onClick={(e) => setSystemValue(3)} className={Button}>Save</button>
-        <div className="mx-8 flex">
-          <textarea 
-            placeholder="JSON text data here" 
-            className="m-2 focus:outline-none" 
-            onChange={(e) => handleJsonText(e.target.value)}>
-          </textarea>
-          <button onClick={(e) => setSystemValue(2)} className={Button}>Load JSON</button>
-        </div>
-        <a href='./documents' target='_blank' rel='noopener noreferrer'>
+        <a className='ml-8' href='./documents' target='_blank' rel='noopener noreferrer'>
           <button className={Button}>Docs</button>
         </a>
       </div>
