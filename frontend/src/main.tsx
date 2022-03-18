@@ -6,10 +6,16 @@ import * as go from 'gojs';
 import { ReactDiagram } from 'gojs-react';
 
 import './App.css';  // contains .diagram-component CSS
-import { ICshapeStyle, nodeEllipse, ledRedStyle, ledYellowStyle, ledGreenStyle, resistorStyle, sevenSegmentStyle, numberPart, numberPartG, numberPartF, numberPartA, numberPartB, numberPartC,numberPartD,numberPartE, twoWayLineA, twoWayLineB, twoWayLineC } from './components/node/nodeStyle';
-import { FromBottom, FromTop, InoutPort, SwitchLeft, SwitchRight } from './components/node/portTemplate';
+import { 
+  ICshapeStyle, nodeEllipse, ledRedStyle, ledYellowStyle, ledGreenStyle, resistorStyle, 
+  sevenSegmentStyle, numberPartG, numberPartF, numberPartA, numberPartB, numberPartC, numberPartD, numberPartE, 
+  twoWayLineA, twoWayLineB, twoWayLineC 
+} from './components/node/nodeStyle';
+import { 
+  FromBottom, FromTop, InoutPort, SwitchLeft, SwitchRight 
+} from './components/node/portTemplate';
 
-var count=0;
+var count = 0;
 var jsonData = {};
 var FileSaver = require('file-saver');
 
@@ -22,15 +28,16 @@ var FileSaver = require('file-saver');
 */
 var sys = 0
 
-//Button styling
+// Tailwind button styling
 const Button =
   'px-8 py-4 bg-black text-white text-xl block transition ease-out duration-300 focus:outline-none hover:bg-white hover:text-black';
+/* Add another constant here */
 
 function initDiagram() {
 
-  // define variable
-  var red = "orangered";  // 0 or false
-  var green = "forestgreen";  // 1 or true
+  // define local variable
+  var red = "orangered";      // for logic 0 or false
+  var green = "forestgreen";  // for logic 1 or true
   var black = "black"
   var blue = "blue"
   var yellow = "yellow"
@@ -40,6 +47,7 @@ function initDiagram() {
 
   const $ = go.GraphObject.make;
   // set your license key here before creating the diagram: go.Diagram.licenseKey = "...";
+
   const diagram =
     $(go.Diagram,
       {
@@ -59,27 +67,6 @@ function initDiagram() {
     } else {
       if (idx >= 0) document.title = document.title.substr(0, idx);
     }
-  });
-
-  // create a new Platte
-  var palette = new go.Palette("palette");
-  var palette2 = new go.Palette("palette2");
-
-  // grid
-  diagram.grid.visible = true;
-  diagram.grid =
-  $(go.Panel, go.Panel.Grid,  // or "Grid"
-    { gridCellSize: new go.Size(10, 10) },
-    $(go.Shape, "LineH", { stroke: "lightgray" }),
-    $(go.Shape, "LineV", { stroke: "lightgray" })
-  );
-
-  go.Shape.defineFigureGenerator("HalfEllipse", function(shape, w, h) {
-    return new go.Geometry()
-      .add(new go.PathFigure(0, 0, true)
-      .add(new go.PathSegment(go.PathSegment.Bezier, w, .5 * h, KAPPA * w, 0, w, (.5 - KAPPA / 2) * h))
-      .add(new go.PathSegment(go.PathSegment.Bezier, 0, h, w, (.5 + KAPPA / 2) * h, KAPPA * w, h).close()))
-      .setSpots(0, 0.156, 0.844, 0.844);
   });
   
   // creates relinkable Links that will avoid crossing Nodes when possible 
@@ -105,6 +92,28 @@ function initDiagram() {
         linkToPortIdProperty: "toPort",      // identifies data property names
         linkKeyProperty: 'key',
     });
+
+  // grid settings
+  diagram.grid.visible = true;
+  diagram.grid =
+  $(go.Panel, go.Panel.Grid,  // or "Grid"
+    { gridCellSize: new go.Size(10, 10) },
+    $(go.Shape, "LineH", { stroke: "lightgray" }),
+    $(go.Shape, "LineV", { stroke: "lightgray" })
+  );
+
+  // custom elipse shape
+  go.Shape.defineFigureGenerator("HalfEllipse", function(shape, w, h) {
+    return new go.Geometry()
+      .add(new go.PathFigure(0, 0, true)
+      .add(new go.PathSegment(go.PathSegment.Bezier, w, .5 * h, KAPPA * w, 0, w, (.5 - KAPPA / 2) * h))
+      .add(new go.PathSegment(go.PathSegment.Bezier, 0, h, w, (.5 + KAPPA / 2) * h, KAPPA * w, h).close()))
+      .setSpots(0, 0.156, 0.844, 0.844);
+  });
+
+  // create a new Platte
+  var palette = new go.Palette("palette");    // for IC Gates
+  var palette2 = new go.Palette("palette2");  // for other items
     
   // node template helpers (Tooltip when hover with mouse)
   var sharedToolTip =
@@ -113,8 +122,8 @@ function initDiagram() {
       $(go.TextBlock, { margin: 2 },
         new go.Binding("text", "", function(d) { return d.category; })));
 
-  // node settings
-
+  // node style settings
+  
   function nodeStyle() {
     return [new go.Binding("location", "loc", go.Point.parse).makeTwoWay(go.Point.stringify),
     new go.Binding("isShadowed", "isSelected").ofObject(),
@@ -218,7 +227,7 @@ function initDiagram() {
     );
 
   var orTemplate =
-      $(go.Node, "Spot", nodeStyle(),
+    $(go.Node, "Spot", nodeStyle(),
       $(go.Shape, "Rectangle", ICshapeStyle()),
       $(go.Shape, "HalfEllipse", nodeEllipse(),
         { alignment: new go.Spot(0.05, 0.5)}),
@@ -254,7 +263,7 @@ function initDiagram() {
     );
 
   var xorTemplate =
-      $(go.Node, "Spot", nodeStyle(),
+    $(go.Node, "Spot", nodeStyle(),
       $(go.Shape, "Rectangle", ICshapeStyle()),
       $(go.Shape, "HalfEllipse", nodeEllipse(),
         { alignment: new go.Spot(0.05, 0.5)}),
@@ -620,6 +629,8 @@ function initDiagram() {
         { name:"DP",desiredSize: new go.Size(10, 10), stroke: "white", fill: "black", alignment: new go.Spot(0.85, 0.9) }),
     );
 
+  // -- end node template --
+
   // add the templates created above to diagram and palette
   diagram.nodeTemplateMap.add("clk", clkTemplate);
   diagram.nodeTemplateMap.add("input", inputTemplate);
@@ -644,10 +655,8 @@ function initDiagram() {
   diagram.nodeTemplateMap.add("gnd", gndTemplate);
   
   // share the template map with the Palette
-  palette.nodeTemplateMap = diagram.nodeTemplateMap;
-
-  // "Others" category palette
-  palette2.nodeTemplateMap = diagram.nodeTemplateMap;
+  palette.nodeTemplateMap = diagram.nodeTemplateMap;    // IC gates
+  palette2.nodeTemplateMap = diagram.nodeTemplateMap;   // Others
 
   // Add something to palette 
   palette.model.nodeDataArray = [
@@ -1233,7 +1242,7 @@ function initDiagram() {
 
   function getinput7seg(node:any){
     var input = [black,black,black,black,black,black,black,black,black,black]
-    //console.log(input)
+
     input[0] = getvalue(node,"portA")!
     input[1] = getvalue(node,"portB")!
     input[2] = getvalue(node,"portC")!
@@ -1250,7 +1259,7 @@ function initDiagram() {
 
   function do7seg(node:any){
     var input = getinput7seg(node)
-    //console.log(input)
+
     if(input[7]===yellow && input[8]===yellow){
 
       if (input[0]==green) {node.findObject("A").fill=red} else {node.findObject("A").fill=black} 
@@ -1277,9 +1286,6 @@ function initDiagram() {
 
   function doDff(node:any) {
     var input = getinputdff(node)
-    //console.log("hello")
-
-    //console.log(getoldvalue(node,"port9"))
 
     if(input[0]===yellow && input[9]===grey){ //vcc and gnd must active
 
@@ -1296,7 +1302,6 @@ function initDiagram() {
         setvalue(node,"port8",red)
       }
       else if(input[3]===green){ //check clk change
-        //console.log(input)
         if(input[2]===green) {setvalue(node,"port9",green)}
         else {setvalue(node,"port9",red)}
 
@@ -1304,8 +1309,6 @@ function initDiagram() {
         else setvalue(node,"port8",green)
 
       }
-
-      //console.log(input)
 
 
       //----------------------------------------------
@@ -1353,7 +1356,6 @@ function initDiagram() {
     if (isConfirm) {
       const newData = {};
       diagram.model = go.Model.fromJson(newData);
-      console.log('new file');
     }
     sys = 0;
   }
@@ -1361,7 +1363,6 @@ function initDiagram() {
   async function save() {
     var data = diagram.model.toJson();
     jsonData = data;
-    console.log('save', jsonData);
     diagram.isModified = false;
     var blob = new Blob([jsonData as BlobPart], {type : 'application/json'});
     FileSaver.saveAs(blob, "diagram.json");
@@ -1370,7 +1371,6 @@ function initDiagram() {
 
   async function load(Data: any) {
     diagram.model = go.Model.fromJson(Data);
-    console.log('load', Data);
     sys = 0;
   }
 
@@ -1390,15 +1390,6 @@ function Main() {
     history.push('./online-simple-circuit');
   }
 
-  // for alert when exit page without saving change. Uncomment to enable.
-  /*
-  window.addEventListener("beforeunload", (ev) => 
-  {  
-    ev.preventDefault();
-    return ev.returnValue = 'Are you sure you want to close?';
-  });
-  */
-
   function setSystemValue(val: any) {
     if (val == 1) sys = 1;
     else if (val == 2) sys = 2;
@@ -1415,10 +1406,6 @@ function Main() {
     };
     reader.readAsText(e.target.files[0]);
     setSystemValue(2);
-  }
-
-  function handleJsonText(e: any) {
-    jsonData = e;
   }
 
   return (
