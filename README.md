@@ -13,5 +13,5 @@ By
 
 | Student ID | name |
 | - | - |
-| 6110503169 | Kornchanok Namsavat |
 | 6010506352 | Apiwit Prasittikarnkul |
+| 6110503169 | Kornchanok Namsavat |
