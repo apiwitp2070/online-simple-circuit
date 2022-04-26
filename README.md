@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="https://github.com/apiwitp2070/online-simple-circuit/blob/main/osc.png?raw=true alt=osc">
+</p>
+
 # online-simple-circuit
 Final Project for CPE32 / 2021-2022  
 
