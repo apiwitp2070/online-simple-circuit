@@ -13,9 +13,4 @@ A link for the demo can be found at the description of below:
 
 > https://online-simple-circuit.vercel.app/
 
-By
-
-| Student ID | name |
-| - | - |
-| 6010506352 | Apiwit Prasittikarnkul |
-| 6110503169 | Kornchanok Namsavat |
+Made By Apiwit Prasittikarnkul and Kornchanok Namsavat
